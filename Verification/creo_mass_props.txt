@@ -1,0 +1,32 @@
+VOLUME =  9.9371681e-06  M^3
+SURFACE AREA =  4.3130973e-03  M^2
+DENSITY =  1.0063229e+04 KILOGRAM / M^3
+MASS =  1.0000000e-01 KILOGRAM 
+
+CENTER OF GRAVITY with respect to CG coordinate frame:
+X   Y   Z     0.0000000e+00  0.0000000e+00  0.0000000e+00  M
+
+INERTIA with respect to CG coordinate frame:  (KILOGRAM * M^2)
+
+INERTIA TENSOR:
+Ixx Ixy Ixz  1.6717776e-06  0.0000000e+00  0.0000000e+00
+Iyx Iyy Iyz  0.0000000e+00  8.3413029e-05  0.0000000e+00
+Izx Izy Izz  0.0000000e+00  0.0000000e+00  8.3418140e-05
+
+INERTIA at CENTER OF GRAVITY with respect to CG coordinate frame:  (KILOGRAM * M^2)
+
+INERTIA TENSOR:
+Ixx Ixy Ixz  1.6717776e-06  0.0000000e+00  0.0000000e+00
+Iyx Iyy Iyz  0.0000000e+00  8.3413029e-05  0.0000000e+00
+Izx Izy Izz  0.0000000e+00  0.0000000e+00  8.3418140e-05
+
+PRINCIPAL MOMENTS OF INERTIA:  (KILOGRAM * M^2)
+I1  I2  I3   1.6717776e-06  8.3413029e-05  8.3418140e-05
+
+ROTATION MATRIX from CG orientation to PRINCIPAL AXES:
+       1.00000        0.00000        0.00000
+       0.00000        1.00000        0.00000
+       0.00000        0.00000        1.00000
+
+ROTATION ANGLES from CG orientation to PRINCIPAL AXES (degrees):
+angles about x  y  z   0.000          0.000          0.000 

@@ -1,0 +1,41 @@
+## Linear Chain of 6 bodies along the x-axis
+# 
+
+* Initially at rest except where specified
+* System under the influence of gravity, g=10 m/s^2
+* Each body has the following properties
+	* Mass = 0.1 kg
+	* Length = 0.09 m
+	* CG = 0.045 m
+	* Ixx = 1.5e-6 kg m^2
+	* Iyy = Izz = 1e-4 kg m^2
+
+* Bodies 1 through 5 have specified zero torque tau(i)=0 and unknown motion qpp(i)=?
+* Body 6 has specified motion of joint speed  qp(6) = 1 and unknown torque tau(6)
+* Specified with the following settings
+	* q = [0,0,0,0,0,0]
+	* qp = [0,0,0,0,0,1]
+	* pivot = [1,2,3,4,5 | 6]
+	* qpp_known = [0]
+	* tau_known = [0,0,0,0,0]
+
+MATLAB(COMPOSITE)			FORTRAN (COMPOSITE)			FOTRAN(ARTICULATED)
+														
+qpp=						qpp=						qpp=
+	  -130.509382073023			-130.509382073027		-130.509382073021
+	     153.2936534551			153.293653455110		153.293653455096
+	  -26.7576618569071			-26.7576618569215		-26.7576618569052
+	   4.64181409052929			4.64181409054333		4.64181409053149
+	 -0.727423332046804			-0.727423332055319		-0.727423332049014
+	                  0			0.000000000000D+000		0.000000000000000D+000
+				  						
+tau =						tau =						tau =
+   2.22044604925031e-16		-1.776356839400250D-015		0.000000000000000D+000
+                      0		-4.440892098500626D-016		0.000000000000000D+000
+  -1.11022302462516e-16		0.000000000000000D+000		0.000000000000000D+000
+  -1.11022302462516e-16		-7.771561172376096D-016		0.000000000000000D+000
+                      0		-1.665334536937735D-016		0.000000000000000D+000
+-0.00000892370709756896		-8.923707097832634D-006		-8.923707097641123D-006
+						
+						
+

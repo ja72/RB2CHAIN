@@ -1,0 +1,40 @@
+Inversion of the lower triangular matrix resulting from connectivity of a tree structure of rigid bodies
+===
+
+A system of rigid bodies is connected with joints in a tree structure. Each body has one parent and multiple children. Recursively 
+the velocities of each body are found by `v_i = v_j + s_i*qp_i` where `i` is the body being examined and `j` its parent. To solve
+for all the velocities one constructs a sparse parent matrix `P` such that
+
+    (1-P)*v = s*qp
+
+The matrix `P` has 1 in each row at the column corresponding to the parent `j`-th body. The algorithm
+below is used to find the inverse `T` of `(1-P)` such that `v = T*s*qp` without doing a full `LU` decomposition.
+
+Example code using MATLAB:
+
+ * Initialization of sparse tree matrix
+
+	% Parent indices
+	k = [0,1,1,3]   % or [0,1,2,3], [0,1,1,1], [0,1,2,2], ...
+
+	% Construct parent matrix P
+	n = size(k,2);
+	P = zeros(n,n);
+	for i=2:n
+		P(i,k(i))=-1;
+	end
+
+
+ * Inversion to tree matrix T = inv(1-P)
+
+	T=eye(n);
+	for i=2:n,
+		j=k(i);
+		while j>0,
+			T(i,j)=1;
+			j=k(j);
+		end;
+	end
+
+
+Reference SO question:	http://math.stackexchange.com/questions/2096755/how-do-i-invert-this-sparse-lower-triangular-matrix
