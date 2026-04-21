@@ -12,6 +12,7 @@
 !
 !****************************************************************************
     program Main
+    use show_matrix_mod
     use rigid_body_chain
     implicit none
     
@@ -21,9 +22,10 @@
     type(rbody) :: rb
     type(state) :: st(n)
     type(rbchain) :: chain
-    real(real64) :: t, q(n), h
-    real(real64) :: K(4,n), C(4,n)
-    integer :: i, steps, fi, sol_method
+    type(kinematics) :: sol(n)
+    real(real64) :: t, h, qpp(n), tau(n)
+    real(real64) :: f_err(n)
+    integer :: i, steps, fi, sol_method, j
     integer(int64) :: tic, toc, rate
     real(real32) :: time, steps_per_sec
     !call test_linear_system()
@@ -46,11 +48,11 @@
 
     !Set first body joint at the origin
     chain%rb(1)%base_pos = o_
-    chain%rb(6)%joint_driver = known_motion
-    chain%rb(6)%motor = 0D0
+    !chain%rb(6)%joint_driver = known_motion
+    !chain%rb(6)%motor = 0D0
     
     ! Set time step (not used) and initialize MMOI matrices
-    call chain%prepare_simulation(1d-4)    
+    call chain%prepare_simulation()    
 
     ! Prepare state object
     t = 0.0D0
@@ -58,6 +60,13 @@
     st%qp = [(0d0,i=1,n)]  ! Set joint velocities
     st(6)%qp = 1d0
     
+    call calc_acceleration_art(chain, t, st%q, st%qp, qpp, tau, sol)
+    do j=1,n
+        f_err(j) = maxval(abs( sol(j)%fnet - sol(j)%facc ))
+    end do
+    print *, 'Force Balance Error (max abs value) for each body:'
+    call show(f_err)    
+    stop
     sol_method = ART_METHOD 
     !sol_method = CRB_METHOD
     
@@ -99,6 +108,7 @@
     close(fi)
     
     contains
+    
         
     end program
     

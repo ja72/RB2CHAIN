@@ -5,7 +5,7 @@
     implicit none
 
         ! Gravity vector definition
-        real(real64), parameter :: gee(3) = [0D0,-10D0,0D0]        
+        real(real64), parameter :: gee(nvec) = [0D0,-10D0,0D0]        
     
         !
         enum, bind(c)
@@ -21,15 +21,15 @@
         ! Specification of rigid body type. Each body rests on top of a 1DOF joint
         type :: rbody            
             real(real64) :: mass                                  ! Mass of the body
-            real(real64) :: cg(3) = o_                            ! Center of mass position vector relative to the top of the joint in local coordinates
+            real(real64) :: cg(nvec) = o_                            ! Center of mass position vector relative to the top of the joint in local coordinates
             real(real64) :: I_xx, I_yy, I_zz, I_xy, I_xz, I_yz    ! Mass 3×3 symmetric moment of inertia components in local coordinates
-            real(real64) :: base_pos(3) = o_                      ! Joint base position in previous body coordinates
-            real(real64) :: base_rot(3,3) = E3_                   ! Joint base rotation in previous body coordinates
+            real(real64) :: base_pos(nvec) = o_                      ! Joint base position in previous body coordinates
+            real(real64) :: base_rot(nvec,nvec) = E3_                   ! Joint base rotation in previous body coordinates
             integer  :: joint_type = revolute                 ! Joint type constant (1=revolute, 2=prismatic)
             integer  :: joint_axis = z_axis                   ! Joint direction flag (1=x-axis, 2=y-axis, 3=z-axis)
             integer  :: joint_driver = known_torque           ! Joint driver flag (1=known torque, 2=known motion)            
             real(real64) :: motor                                 ! Value to used for joint torque or motion depending on 'joint_drive' switch
-            real(real64) :: Ic(3,3), Mc(3,3)                      ! Local MMOI and inverse MMOI. Calculated once only            
+            real(real64) :: Ic(nvec,nvec), Mc(nvec,nvec)                      ! Local MMOI and inverse MMOI. Calculated once only            
             logical        :: mmoi_initialized = .false.            ! Flag for local MMOI calculation
         contains
             procedure, pass :: initialize_mmoi             ! Called once to set 3×3 MMOI matrices from component values
@@ -52,37 +52,38 @@
             real(real64) :: qp                                    ! Joint velocity
             real(real64) :: qpp                                   ! Joint accleration
             real(real64) :: tau                                   ! Joint torque/force
-            real(real64) :: pos(3)                                ! Position vector for top of joint
-            real(real64) :: rot(3,3)                              ! Rotation matrix for body orientation
-            real(real64) :: axis(6)                               ! Joint motion axis (twist)
-            real(real64) :: cg(3)                                 ! Center of mass position vector
-            real(real64) :: spi(6,6), spm(6,6)                    ! Spatial inertia and mobility
-            real(real64) :: vel(6)                                ! Spatial velocity of body (twist)
-            real(real64) :: applied_force(6)                      ! Applied forces on body (wrench)
-            real(real64) :: weight(6)                             ! Weight wrench of body (wrench)
-            real(real64) :: kappa(6)                              ! Corriolis acceleration of joint (twist)
-            real(real64) :: bias(6)                               ! Centripetal forces of body (wrench)
-            real(real64) :: acc(6)                                ! Spatial acceleration of the rigid body
-            real(real64) :: force(6)                              ! The joint reaction force on the body(wrench)
+            real(real64) :: pos(nvec)                                ! Position vector for top of joint
+            real(real64) :: rot(nvec,nvec)                              ! Rotation matrix for body orientation
+            real(real64) :: axis(nspc)                               ! Joint motion axis (twist)
+            real(real64) :: cg(nvec)                                 ! Center of mass position vector
+            real(real64) :: spi(nspc,nspc), spm(nspc,nspc)                    ! Spatial inertia and mobility
+            real(real64) :: vel(nspc)                                ! Spatial velocity of body (twist)
+            real(real64) :: applied_force(nspc)                      ! Applied forces on body (wrench)
+            real(real64) :: weight(nspc)                             ! Weight wrench of body (wrench)
+            real(real64) :: kappa(nspc)                              ! Corriolis acceleration of joint (twist)
+            real(real64) :: bias(nspc)                               ! Centripetal forces of body (wrench)
+            real(real64) :: acc(nspc)                                ! Spatial acceleration of the rigid body
+            real(real64) :: force(nspc)                              ! The joint reaction force on the body(wrench)
+            real(real64) :: fnet(nspc)                               ! The net force on the body(wrench)
+            real(real64) :: facc(nspc)                               ! The inertial force on the body(wrench)
         contains
-            procedure, pass :: total_force => kinematics_sum_forces
             procedure, pass :: velocity_at => point_velocity
             procedure, pass :: acceleration_at => point_acceleration
         end type
         
         type :: articulated
             type(kinematics) :: kin                                 ! Body kinematics
-            real(real64) :: ari(6,6)                              ! Articulated inertia matrix
-            real(real64) :: arb(6)                                ! Articulated bias forces
-            real(real64) :: iap(6)                                ! Articulated axis of percussion
-            real(real64) :: rsp(6,6)                              ! Articulated reaction space        
+            real(real64) :: ari(nspc,nspc)                              ! Articulated inertia matrix
+            real(real64) :: arb(nspc)                                ! Articulated bias forces
+            real(real64) :: iap(nspc)                                ! Articulated axis of percussion
+            real(real64) :: rsp(nspc,nspc)                              ! Articulated reaction space        
         end type
         
     contains    
     
         pure subroutine initialize_mmoi(rb)
         class(rbody), intent(inout) :: rb        
-        real(real64):: Ic(3,3), Mc(3,3), d
+        real(real64):: Ic(nvec,nvec), Mc(nvec,nvec), d
                     
             ! Set columns of local MMOI in Ic
             Ic(:,1) = [rb%I_xx, rb%I_xy, rb%I_xz]
@@ -104,9 +105,9 @@
         ! Calculate top of joint position and orientation and define joint axis unit twist
         pure subroutine get_joint_properties(rb, prev_pos, prev_rot, q, pos, rot, axis)
         class(rbody), intent(in) :: rb
-        real(real64), intent(in) :: prev_pos(3), prev_rot(3,3), q             ! previous body position & orientation. q: Joint position
-        real(real64), intent(out) :: pos(3), rot(3,3), axis(6)                ! current body position & orientation. Joint axis screw
-        real(real64) :: z(3)        
+        real(real64), intent(in) :: prev_pos(nvec), prev_rot(nvec,nvec), q             ! previous body position & orientation. q: Joint position
+        real(real64), intent(out) :: pos(nvec), rot(nvec,nvec), axis(nspc)                ! current body position & orientation. Joint axis screw
+        real(real64) :: z(nvec)        
             pos = prev_pos + matmul(prev_rot, rb%base_pos)
             rot = matmul(prev_rot, rb%base_rot)        
             z = matmul(rot, direction_vector(rb%joint_axis))     
@@ -118,16 +119,16 @@
                 pos = pos + z*q
                 axis = twist(z)
             case default                                
-                axis = twist_o_
+                axis = screw_o_
             end select
         end subroutine
         
         ! Calculate body inertial properties for current position and orientation
         pure subroutine get_spatial_mmoi_matrix(rb, pos, rot, cg, spi, spm)
         class(rbody), intent(in) :: rb
-        real(real64), intent(in) :: pos(3), rot(3,3)
-        real(real64), intent(out) :: cg(3), spi(6,6), spm(6,6)
-        real(real64) :: rot_t(3,3), I(3,3), M(3,3), cgx(3,3)
+        real(real64), intent(in) :: pos(nvec), rot(nvec,nvec)
+        real(real64), intent(out) :: cg(nvec), spi(nspc,nspc), spm(nspc,nspc)
+        real(real64) :: rot_t(nvec,nvec), I(nvec,nvec), M(nvec,nvec), cgx(nvec,nvec), mc(nvec,nvec)
                         
             rot_t = transpose(rot)
             
@@ -137,34 +138,30 @@
             cg = pos + matmul(rot,rb%cg)
             cgx = .x. cg
             
+            mc = rb%mass*cgx
             spi(1:3, 1:3) = rb%mass*E3_
-            spi(1:3, 4:6) = -rb%mass*cgx
-            spi(4:6, 1:3) =  rb%mass*cgx
-            spi(4:6, 4:6) = I-matmul(rb%mass*cgx,cgx)
+            spi(1:3, 4:6) = -mc
+            spi(4:6, 1:3) =  mc
+            spi(4:6, 4:6) = I-matmul(mc,cgx)
             
-            spm(1:3, 1:3) = E3_/rb%mass - matmul(cgx, matmul(M,cgx))
+            mc = matmul(M, cgx)
+            spm(1:3, 1:3) = E3_/rb%mass - matmul(cgx, mc)
             spm(1:3, 4:6) = matmul(cgx,M)
-            spm(4:6, 1:3) = -matmul(M,cgx)
+            spm(4:6, 1:3) = -mc
             spm(4:6, 4:6) = M
         end subroutine       
         
-        pure function kinematics_sum_forces(kin) result(f)
-        class(kinematics), intent(in) :: kin
-        real(real64) :: f(6)
-            f = kin%weight + kin%applied_force
-        end function
-        
         pure function point_velocity(kin, r) result(v)
         class(kinematics), intent(in) :: kin
-        real(real64), intent(in) :: r(3)
-        real(real64) :: v(3)
+        real(real64), intent(in) :: r(nvec)
+        real(real64) :: v(nvec)
             v = kin%vel(1:3) + ( kin%vel(4:6) .x. r)
         end function
                                                                
         pure function point_acceleration(kin, r) result(a)
         class(kinematics), intent(in) :: kin
-        real(real64), intent(in) :: r(3)
-        real(real64) :: a(3)
+        real(real64), intent(in) :: r(nvec)
+        real(real64) :: a(nvec)
             a = kin%acc(1:3) + ( kin%acc(4:6) .x. r) + (kin%vel(4:6) .x. (kin%vel(4:6) .x. r))
         end function
         

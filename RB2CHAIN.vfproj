@@ -67,7 +67,8 @@
 			<Filter Name="Dynamics">
 				<File RelativePath=".\rigid_body.f90">
 				</File>
-				<File RelativePath=".\rigid_body_chain.f90"/>
+				<File RelativePath=".\rigid_body_chain.f90">
+				</File>
 			</Filter>
 			<Filter Name="Spatial">
 				<File RelativePath=".\screw_algebra.f90">
@@ -75,7 +76,10 @@
 				<File RelativePath=".\vector_algebra.f90">
 				</File>
 			</Filter>
-			<File RelativePath=".\MAIN.f90"/>
+			<File RelativePath=".\MAIN.f90">
+			</File>
+			<File RelativePath=".\show_matrix_mod.f90">
+			</File>
 		</Filter>
 		<File RelativePath=".\gesv.txt"/>
 		<File RelativePath=".\results.txt"/>

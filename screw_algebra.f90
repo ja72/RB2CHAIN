@@ -19,11 +19,10 @@
         integer, parameter :: nspc = 2*nvec     ! Number of components in a screw
 
         ! Unit screws definition
-        real(real64), parameter ::  twist_o_(nspc) = [o_, o_]
+        real(real64), parameter ::  screw_o_(nspc) = [o_, o_]
         real(real64), parameter ::  twist_i_(nspc) = [o_, i_]
         real(real64), parameter ::  twist_j_(nspc) = [o_, j_]
         real(real64), parameter ::  twist_k_(nspc) = [o_, k_]
-        real(real64), parameter :: wrench_o_(nspc) = [o_, o_]
         real(real64), parameter :: wrench_i_(nspc) = [i_, o_]
         real(real64), parameter :: wrench_j_(nspc) = [j_, o_]
         real(real64), parameter :: wrench_k_(nspc) = [k_, o_]

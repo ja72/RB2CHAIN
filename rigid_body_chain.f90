@@ -1,4 +1,5 @@
 ﻿module rigid_body_chain
+    use show_matrix_mod
     use rigid_body
     implicit none
     
@@ -26,12 +27,14 @@
     contains
     
     subroutine do_step(chain, t, st, h, method)
+    !dec$ attributes dllexport :: do_step
+    !dec$ attributes alias:'do_step' :: do_step
     class(rbchain), intent(inout) :: chain
     REAL(real64), intent(inout) :: t
     type(state), intent(inout) :: st(:)
     real(real64), intent(in) :: h
     integer, intent(in), optional :: method
-    real(real64) :: q(size(st))
+    real(real64) :: q(size(st)), tau(size(st))
     real(real64) :: K(4,size(st)), C(4,size(st))
     integer :: m
         if( present(method) ) then
@@ -44,23 +47,24 @@
         select case(m)
         case(ART_METHOD)
             C(1,:) = st%qp
-            K(1,:) = calc_acceleration_art(chain, t, q,C(1,:))
+            call calc_acceleration_art(chain, t, q, C(1,:), K(1,:), tau )
             C(2,:) = C(1,:) + h/2*K(1,:)
-            K(2,:) = calc_acceleration_art(chain, t+h/2, q+h/2*C(1,:),C(1,:)+h/2*K(1,:))
+            call calc_acceleration_art(chain, t+h/2, q+h/2*C(1,:),C(2,:), K(2,:), tau)
             C(3,:) = C(1,:) + h/2*K(2,:)
-            K(3,:) = calc_acceleration_art(chain, t+h/2, q+h/2*C(2,:),C(1,:)+h/2*K(2,:))
+            call calc_acceleration_art(chain, t+h/2, q+h/2*C(2,:),C(3,:), K(3,:), tau)
             C(4,:) = C(1,:) + h*K(3,:)
-            K(4,:) = calc_acceleration_art(chain, t+h, q+h*C(3,:),C(1,:)+h*K(3,:))            
+            call calc_acceleration_art(chain, t+h, q+h*C(3,:),C(4,:), K(4,:), tau)            
         case(CRB_METHOD)
             C(1,:) = st%qp
-            K(1,:) = calc_acceleration_crb(chain, t, q,C(1,:))
+            call calc_acceleration_crb(chain, t, q, C(1,:), K(1,:), tau )
             C(2,:) = C(1,:) + h/2*K(1,:)
-            K(2,:) = calc_acceleration_crb(chain, t+h/2, q+h/2*C(1,:),C(1,:)+h/2*K(1,:))
+            call calc_acceleration_crb(chain, t+h/2, q+h/2*C(1,:),C(2,:), K(2,:), tau)
             C(3,:) = C(1,:) + h/2*K(2,:)
-            K(3,:) = calc_acceleration_crb(chain, t+h/2, q+h/2*C(2,:),C(1,:)+h/2*K(2,:))
+            call calc_acceleration_crb(chain, t+h/2, q+h/2*C(2,:),C(3,:), K(3,:), tau)
             C(4,:) = C(1,:) + h*K(3,:)
-            K(4,:) = calc_acceleration_crb(chain, t+h, q+h*C(3,:),C(1,:)+h*K(3,:))            
+            call calc_acceleration_crb(chain, t+h, q+h*C(3,:),C(4,:), K(4,:), tau)            
         case default
+        error stop 'Invalid solution method selected'
         end select
         
         t = t + h 
@@ -85,10 +89,14 @@
 
     subroutine prepare_simulation(chain, time_step)
     class(rbchain), intent(inout) :: chain
-    real(real64), intent(in) :: time_step
+    real(real64), intent(in), optional :: time_step
     integer(int32) :: i
         chain%time = 0
-        chain%step = time_step
+        if(present(time_step)) then
+            chain%step = time_step
+        else
+            chain%step = 1d-4
+        end if
         do i=1,chain%n
             call chain%rb(i)%initialize_mmoi()
         end do
@@ -100,9 +108,9 @@
     type(state), intent(in) :: st(:)
     type(kinematics) :: kin(chain%n)
     type(rbody) :: rbs(chain%n)
-    real(real64) :: z(3)
+    real(real64) :: z(nvec)
     integer(int32) :: i, n, j
-    real(real64) :: prev_pos(3), prev_rot(3,3), prev_vel(6)
+    real(real64) :: prev_pos(nvec), prev_rot(nvec,nvec), prev_vel(nspc)
 
         n  =chain%n
         rbs = chain%rb
@@ -121,7 +129,7 @@
                 kin(i)%qpp = rbs(i)%motor
                 kin(i)%tau = 0
             end select
-            kin(i)%applied_force = wrench_o_
+            kin(i)%applied_force = screw_o_
             j = chain%parents(i)
             kin(i)%parent_index = j
             if(j==0) then
@@ -144,15 +152,40 @@
                 kin(i)%pos = kin(i)%pos + z*kin(i)%q
                 kin(i)%axis = twist(z)
                 case default
-                kin(i)%axis = twist_o_
+                kin(i)%axis = screw_o_
             end select
+            ! Fill in the spatial inertia matrix for this body. This is a 6×6 matrix that combines the mass and inertia
             call rbs(i)%get_spatial_mmoi_matrix(kin(i)%pos, kin(i)%rot, kin(i)%cg, kin(i)%spi, kin(i)%spm)
+            !tex: ${\bf w}_i = \pmatrix{ m_i \vec{g} & \vec{c}_i\times m_i \vec{g} }$
             kin(i)%weight = wrench(rbs(i)%mass*gee, kin(i)%cg)
+            !tex: ${\bf v}_i = {\bf v}_{i-1} + {\bf s}_i \dot{q}_i$
             kin(i)%vel = prev_vel + kin(i)%axis*kin(i)%qp
+            !tex: $\boldsymbol{\kappa}_i = {\bf v}_i \times {\bf s}_i \dot{q}_i$
             kin(i)%kappa = kin(i)%vel .xt. (kin(i)%axis*kin(i)%qp)
+            !tex: ${\bf p}_i = {\bf v}_i \times ({\bf I}_i {\bf v}_i)$
             kin(i)%bias = kin(i)%vel .xw. matmul(kin(i)%spi, kin(i)%vel)
-            kin(i)%force = wrench_o_
-            kin(i)%acc = twist_o_
+            kin(i)%force = screw_o_
+            kin(i)%acc = screw_o_
+            kin(i)%fnet = screw_o_
+            kin(i)%facc = screw_o_
+            
+            !dec$ IF DEFINED    (DEBUG)
+            print *, 'Calculating kinematics for body', i
+            print *, 'pos:'
+            call show(kin(i)%pos)
+            print *, 'axis:'
+            call show(kin(i)%axis)
+            print *, 'spi:'
+            call show(kin(i)%spi)
+            print *, 'weight:'
+            call show(kin(i)%weight)
+            print *, 'vel:'
+            call show(kin(i)%vel)
+            print *, 'kappa:'
+            call show(kin(i)%kappa)
+            print *, 'bias:'
+            call show(kin(i)%bias)
+            !dec$ endif
         end do
     end function
 
@@ -167,7 +200,7 @@
         do i=n,1,-1
             art(i)%kin = kin(i)
             art(i)%ari = art(i)%kin%spi
-            art(i)%arb = kin(i)%bias - kin(i)%total_force()
+            art(i)%arb = kin(i)%bias - (kin(i)%weight + kin(i)%applied_force)
             ! Check all subsequent bodies if [i] is their parent
             do k=i+1,n
                 if(kin(k)%parent_index==i) then
@@ -191,6 +224,18 @@
             ars = matmul(art(i)%ari, kin(i)%axis)
             art(i)%iap = ars/dot_product(kin(i)%axis, ars)
             art(i)%rsp = E6_ - outer_product(art(i)%iap, kin(i)%axis)
+            
+            !dec$ IF DEFINED    (DEBUG)
+            print *, 'Calculating articulated for body', i
+            print *, 'ari: (articulated inertia)'
+            call show(art(i)%ari)
+            print *, 'arb: (articulated bias force)'
+            call show(art(i)%arb)
+            print *, 'iap: (articulated percussiob axis)'
+            call show(art(i)%iap)
+            print *, 'rsp: (artuculated reaction space)'
+            call show(art(i)%rsp)
+            !dec$ endif
         end do
     end function
 
@@ -198,14 +243,14 @@
     class(rbchain), intent(in) :: chain
     type(articulated),intent(in):: art(:)
     type(kinematics) :: kin(chain%n)
-    real(real64) :: prev_acc(6), h, hh, s(6), A(6,6)
-    integer(int32) :: n, i, j
+    real(real64) :: prev_acc(nspc), h, hh, s(nspc), A(nspc,nspc), f_nxt(nspc)
+    integer(int32) :: n, i, j, k
         n = chain%n
         do i=1,n
             kin(i) = art(i)%kin
             j = kin(i)%parent_index
             if(j==0) then
-                prev_acc = twist_o_
+                prev_acc = screw_o_
             else
                 prev_acc = kin(j)%acc
             end if
@@ -218,18 +263,44 @@
             case(known_torque)
                 kin(i)%qpp = ( kin(i)%tau - dot_product(s, matmul(A, prev_acc + kin(i)%kappa) + art(i)%arb))/h
             case(known_motion)
-                kin(i)%tau =h*kin(i)%qpp + dot_product(s, matmul(A, prev_acc+kin(i)%kappa)+art(i)%arb)
+                kin(i)%tau = h*kin(i)%qpp + dot_product(s, matmul(A, prev_acc+kin(i)%kappa)+art(i)%arb)
             end select
+            !tex: ${\bf a}_i = {\bf a}_{i-1} + {\bf s}_i \ddot{q}_i + \boldsymbol{\kappa}_i$
             kin(i)%acc = prev_acc + s*kin(i)%qpp + kin(i)%kappa
+            !tex: ${\bf f}_i = {\bf I}_i^A {\bf a}_i + {\bf p}_i^A$
             kin(i)%force = matmul(A, kin(i)%acc) + art(i)%arb
+            !tex: ${\bf f}_{\rm acc}  = {\bf I}_i {\bf a}_i + {\bf p}_i$
+            kin(i)%facc = matmul(kin(i)%spi, kin(i)%acc) + kin(i)%bias
+            
+            !dec$ IF DEFINED    (DEBUG)
+            print *, 'Calculating dynamics for body', i
+            print *, 'acc:'
+            call show(kin(i)%acc)
+            print *, 'frc:'
+            call show(kin(i)%force)
+            print *, 'facc:'
+            call show(kin(i)%facc)
+            !dec$ ENDIF
         end do
-
+        print *, 'qpp:'
+        call show(kin(:)%qpp)
+        
+        do i=n,1,-1
+            f_nxt = screw_o_
+            do k=i+1,n
+                if(kin(k)%parent_index==i) then
+                    f_nxt = f_nxt + kin(k)%force
+                end if
+            end do
+            kin(i)%fnet = kin(i)%force - f_nxt + ( kin(i)%weight + kin(i)%applied_force )
+        end do
     end function
 
-    function calc_acceleration_art(chain,t,q,qp) result(qpp)
+    subroutine calc_acceleration_art(chain,t,q,qp,qpp,tau,sol)
     class(rbchain), intent(inout) :: chain
     real(real64), intent(in) :: t, q(chain%n), qp(chain%n)
-    real(real64) :: qpp(chain%n), tau(chain%n)
+    real(real64), intent(inout) :: qpp(chain%n), tau(chain%n)
+    type(kinematics), intent(out), optional :: sol(chain%n)
     type(state) :: st(chain%n)
     type(kinematics) :: kin(chain%n)
     type(articulated) :: art(chain%n)
@@ -243,12 +314,15 @@
         kin = chain%calc_dynamics(art)
         qpp = kin%qpp
         tau = kin%tau
-    end function
+        if( present(sol) ) then
+            sol = kin
+        end if
+    end subroutine
 
-    function calc_acceleration_crb(chain,t,q,qp) result(qpp)
+    subroutine calc_acceleration_crb(chain,t,q,qp,qpp,tau)
     class(rbchain), intent(inout) :: chain
     real(real64), intent(in) :: t, q(chain%n), qp(chain%n)
-    real(real64) :: qpp(chain%n), tau(chain%n)        
+    real(real64), intent(inout) :: qpp(chain%n), tau(chain%n)
     type(state) :: st(chain%n)
     type(kinematics) :: kin(chain%n)
         
@@ -319,7 +393,7 @@
             spi(row:row+5, row:row+5) = kin(i)%spi
             mmoi(:,:,i) = kin(i)%spi
             kappa(row:row+5) = kin(i)%kappa
-            bias(row:row+5) = kin(i)%bias-kin(i)%total_force()
+            bias(row:row+5) = kin(i)%bias-(kin(i)%weight + kin(i)%applied_force)
 
             j = chain%parents(i)
             if(j>0) then
@@ -361,7 +435,7 @@
         acc = matmul(tree, matmul(axis, qpp) + kappa)
         force = matmul(tree_t, matmul(spi, acc) + bias)
         
-    end function
+    end subroutine
     
     function CompositeInertia(mmoi,itree,n) result(spc)
     integer, intent(in) :: n
