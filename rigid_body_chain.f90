@@ -282,8 +282,11 @@
             call show(kin(i)%facc)
             !dec$ ENDIF
         end do
+        
+        !dec$ IF DEFINED    (DEBUG)
         print *, 'qpp:'
         call show(kin(:)%qpp)
+        !dec$ ENDIF
         
         do i=n,1,-1
             f_nxt = screw_o_

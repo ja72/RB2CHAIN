@@ -28,7 +28,7 @@
 			<Tool Name="VFManifestTool" SuppressStartupBanner="true"/>
 		</Configuration>
 		<Configuration Name="Debug|x64" UseCompiler="ifxCompiler">
-			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" F2003Semantics="true" WarnDeclarations="true" WarnUnusedVariables="true" WarnIgnoreLOC="true" WarnTruncateSource="true" WarnInterfaces="true" LocalSavedScalarsZero="true" InitArrays="true" Traceback="true" NullPointerCheck="true" BoundsCheck="true" DescriptorDataTypeCheck="true" DescriptorDataSizeCheck="true" StackFrameCheck="true" RuntimeLibrary="rtMultiThreadedDebugDLL" UseMkl="mklSequential"/>
+			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" PreprocessorDefinitions="DEBUG" F2003Semantics="true" WarnDeclarations="true" WarnUnusedVariables="true" WarnIgnoreLOC="true" WarnTruncateSource="true" WarnInterfaces="true" LocalSavedScalarsZero="true" InitArrays="true" Traceback="true" NullPointerCheck="true" BoundsCheck="true" DescriptorDataTypeCheck="true" DescriptorDataSizeCheck="true" StackFrameCheck="true" RuntimeLibrary="rtMultiThreadedDebugDLL" UseMkl="mklSequential"/>
 			<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemConsole" AdditionalDependencies="mkl_blas95_lp64.lib mkl_lapack95_lp64.lib"/>
 			<Tool Name="VFResourceCompilerTool"/>
 			<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
@@ -65,21 +65,17 @@
 				<File RelativePath=".\lu_solver.f90"/>
 			</Filter>
 			<Filter Name="Dynamics">
-				<File RelativePath=".\rigid_body.f90">
-				</File>
+				<File RelativePath=".\rigid_body.f90"/>
 				<File RelativePath=".\rigid_body_chain.f90">
 				</File>
 			</Filter>
 			<Filter Name="Spatial">
-				<File RelativePath=".\screw_algebra.f90">
-				</File>
-				<File RelativePath=".\vector_algebra.f90">
-				</File>
+				<File RelativePath=".\screw_algebra.f90"/>
+				<File RelativePath=".\vector_algebra.f90"/>
 			</Filter>
 			<File RelativePath=".\MAIN.f90">
 			</File>
-			<File RelativePath=".\show_matrix_mod.f90">
-			</File>
+			<File RelativePath=".\show_matrix_mod.f90"/>
 		</Filter>
 		<File RelativePath=".\gesv.txt"/>
 		<File RelativePath=".\results.txt"/>

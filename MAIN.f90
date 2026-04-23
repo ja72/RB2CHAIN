@@ -66,7 +66,9 @@
     end do
     print *, 'Force Balance Error (max abs value) for each body:'
     call show(f_err)    
+    !dec$ IF DEFINED    (DEBUG)
     stop
+    !dec$ ENDIF
     sol_method = ART_METHOD 
     !sol_method = CRB_METHOD
     
