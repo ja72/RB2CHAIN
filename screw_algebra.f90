@@ -16,22 +16,30 @@
     USE vector_algebra
     implicit none
     
-        integer, parameter :: nspc = 2*nvec     ! Number of components in a screw
-
         ! Unit screws definition
-        real(real64), parameter ::  screw_o_(nspc) = [o_, o_]
-        real(real64), parameter ::  twist_i_(nspc) = [o_, i_]
-        real(real64), parameter ::  twist_j_(nspc) = [o_, j_]
-        real(real64), parameter ::  twist_k_(nspc) = [o_, k_]
-        real(real64), parameter :: wrench_i_(nspc) = [i_, o_]
-        real(real64), parameter :: wrench_j_(nspc) = [j_, o_]
-        real(real64), parameter :: wrench_k_(nspc) = [k_, o_]
-        real(real64), parameter :: Z6_(nspc,nspc) = reshape( &
-            [0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0], &
-            [nspc,nspc] )
-        real(real64), parameter :: E6_(nspc,nspc) = reshape( &
-            [1,0,0,0,0,0, 0,1,0,0,0,0, 0,0,1,0,0,0, 0,0,0,1,0,0, 0,0,0,0,1,0, 0,0,0,0,0,1], &
-            [nspc,nspc] )
+        real(real64), parameter ::  screw_o_(6) = [o_, o_]
+        real(real64), parameter ::  twist_i_(6) = [o_, i_]
+        real(real64), parameter ::  twist_j_(6) = [o_, j_]
+        real(real64), parameter ::  twist_k_(6) = [o_, k_]
+        real(real64), parameter :: wrench_i_(6) = [i_, o_]
+        real(real64), parameter :: wrench_j_(6) = [j_, o_]
+        real(real64), parameter :: wrench_k_(6) = [k_, o_]
+        
+        real(real64), parameter :: Z6_(6,6) = reshape( &
+            [   0,0,0,0,0,0, &
+                0,0,0,0,0,0, &
+                0,0,0,0,0,0, &
+                0,0,0,0,0,0, &
+                0,0,0,0,0,0, &
+                0,0,0,0,0,0  ], [6,6] )
+        
+        real(real64), parameter :: E6_(6,6) = reshape( &
+            [   1,0,0,0,0,0, &
+                0,1,0,0,0,0, &
+                0,0,1,0,0,0, &
+                0,0,0,1,0,0, &
+                0,0,0,0,1,0, &
+                0,0,0,0,0,1  ], [6,6] )
     
         ! Generic names for functions on screws
         interface twist
@@ -54,9 +62,9 @@
         ! Defines a twist along vector z located at vector r with optional pitch h
         ! twist = (r×z+h*z, z)
         pure function twist_at(z, r, h) result(s)
-            real(real64), intent(in) :: z(nvec), r(nvec)
+            real(real64), intent(in) :: z(3), r(3)
             real(real64), intent(in), optional :: h
-            real(real64) :: s(nspc)            
+            real(real64) :: s(6)            
                 if(present(h) ) then
                     s = [(r .x. z) + h*z, z]
                 else
@@ -67,9 +75,9 @@
         ! Defines a wrench along vector z located at vector r with optional pitch h
         ! wrench = (z, r×z+h*z)
         pure function wrench_at(z, r, h) result(s)
-            real(real64), intent(in) :: z(nvec), r(nvec)
+            real(real64), intent(in) :: z(3), r(3)
             real(real64), intent(in), optional :: h
-            real(real64) :: s(nspc)            
+            real(real64) :: s(6)            
                 if(present(h) ) then
                     s = [z, (r .x. z) + h*z]
                 else
@@ -80,37 +88,37 @@
         ! Defines a pure twist along vector z
         ! twist = (z, 0)
         pure function pure_twist(z) result(s)
-            real(real64), intent(in) :: z(nvec)
-            real(real64) :: s(nspc)            
+            real(real64), intent(in) :: z(3)
+            real(real64) :: s(6)            
                 s = [z, o_]
         end function
         
         ! Defines a pure wrench along vector z
         ! wrench = (0, z)
         pure function pure_wrench(z) result(s)
-            real(real64), intent(in) :: z(nvec)
-            real(real64) :: s(nspc)            
+            real(real64), intent(in) :: z(3)
+            real(real64) :: s(6)            
                 s = [o_, z]
         end function
         
         ! Calculates the scalar magnitude of a twist        
         pure function twist_magnitude(s) result(m)
-            real(real64), intent(in) :: s(nspc)
+            real(real64), intent(in) :: s(6)
             real(real64) :: m
             m =  magnitude(s(4:6))
         end function
         
         ! Calculates the unit direction of a twist
         pure function twist_direction(s) result(z)
-            real(real64), intent(in) :: s(nspc)
-            real(real64) :: z(nvec)
+            real(real64), intent(in) :: s(6)
+            real(real64) :: z(3)
             z =  direction(s(4:6))            
         end function
         
         ! Calculates the closest position of the twist to the origin
         pure function twist_position(s) result(r)
-            real(real64), intent(in) :: s(nspc)
-            real(real64) :: r(nvec), z(nvec), m(nvec)
+            real(real64), intent(in) :: s(6)
+            real(real64) :: r(3), z(3), m(3)
             z = s(4:6)
             m = s(1:3)
             r = (z .x. m)/sumsq(z)
@@ -118,8 +126,8 @@
         
         ! Calculates the scalar pitch of the twist
         pure function twist_pitch(s) result(h)
-            real(real64), intent(in) :: s(nspc)
-            real(real64) :: h, z(nvec), m(nvec)
+            real(real64), intent(in) :: s(6)
+            real(real64) :: h, z(3), m(3)
             z = s(4:6)
             m = s(1:3)
             h = (z .dot. m)/sumsq(z)            
@@ -127,22 +135,22 @@
         
         ! Calculates the scalar magnitude of a wrench
         pure function wrench_magnitude(s) result(m)
-            real(real64), intent(in) :: s(nspc)
+            real(real64), intent(in) :: s(6)
             real(real64) :: m
             m =  magnitude(s(1:3))
         end function
         
         ! Calculates the unit direction of a wrench
         pure function wrench_direction(s) result(z)
-            real(real64), intent(in) :: s(nspc)
-            real(real64) :: z(nvec)
+            real(real64), intent(in) :: s(6)
+            real(real64) :: z(3)
             z =  direction(s(1:3))            
         end function
         
         ! Calculates the closest position of the wrench to the origin
         pure function wrench_position(s) result(r)
-            real(real64), intent(in) :: s(nspc)
-            real(real64) :: r(nvec), z(nvec), m(nvec)
+            real(real64), intent(in) :: s(6)
+            real(real64) :: r(3), z(3), m(3)
             z = s(1:3)
             m = s(4:6)
             r = (z .x. m)/sumsq(z)
@@ -150,8 +158,8 @@
         
         ! Calculates the scalar pitch of the wrench
         pure function wrench_pitch(s) result(h)
-            real(real64), intent(in) :: s(nspc)
-            real(real64) :: h, z(nvec), m(nvec)
+            real(real64), intent(in) :: s(6)
+            real(real64) :: h, z(3), m(3)
             z = s(1:3)
             m = s(4:6)
             h = (z .dot. m)/sumsq(z)            
@@ -159,7 +167,7 @@
         
         ! Calculates the dot product of two screws
         pure function inner_product_screw(a, b) result(s)
-            real(real64), intent(in) :: a(nspc), b(nspc)
+            real(real64), intent(in) :: a(6), b(6)
             real(real64) :: s
             
             s = a(1)*b(1)+a(2)*b(2)+a(3)*b(3)+a(4)*b(4)+a(5)*b(5)+a(6)*b(6)
@@ -169,8 +177,8 @@
         ! Calculates the outer product of two screws
         pure function outer_product_screw(a,b) result(c)        
         !argument specification
-            real(real64), intent(in) :: a(nspc), b(nspc)
-            real(real64) :: c(nspc,nspc)
+            real(real64), intent(in) :: a(6), b(6)
+            real(real64) :: c(6,6)
         !code start
             c(:,1) = a(:)*b(1)
             c(:,2) = a(:)*b(2)
@@ -186,8 +194,8 @@
         ! result =(v, ω)×(a, b) = (ω×a + v×b, ω×b)
         pure function twist_cross_twist(t, s) result(c)
         !argument specification
-            real(real64), intent(in) :: t(nspc), s(nspc)
-            real(real64) :: c(nspc)
+            real(real64), intent(in) :: t(6), s(6)
+            real(real64) :: c(6)
         !code start
             c = [ (t(4:6) .x. s(1:3)) + (t(1:3) .x. s(4:6)), t(4:6) .x. s(4:6) ]
         end function     
@@ -196,8 +204,8 @@
         ! result =(v, ω)× = [ω×, v×| 0,  ω×]
         pure function twist_cross_twist_matrix(t) result(c)
         !argument specification
-            real(real64), intent(in) :: t(nspc)
-            real(real64) :: c(nspc, nspc), wx(nvec,nvec), vx(nvec,nvec)
+            real(real64), intent(in) :: t(6)
+            real(real64) :: c(6, 6), wx(3,3), vx(3,3)
         !code start
             vx = .x. t(1:3)
             wx = .x. t(4:6)
@@ -211,8 +219,8 @@
         ! result =(v, ω)×(a, b) = (ω×a,v×a + ω×b)
         pure function twist_cross_wrench(t, f) result(c)
         !argument specification
-            real(real64), intent(in) :: t(nspc), f(nspc)
-            real(real64) :: c(nspc)
+            real(real64), intent(in) :: t(6), f(6)
+            real(real64) :: c(6)
         !code start
             c = [ t(4:6) .x. f(1:3), (t(1:3) .x. f(1:3)) + (t(4:6) .x. f(4:6)) ]
         end function     
@@ -221,8 +229,8 @@
         ! result =(v, ω)× = [ω×, 0| v×,  ω×]
         pure function twist_cross_wrench_matrix(t) result(c)
         !argument specification
-            real(real64), intent(in) :: t(nspc)
-            real(real64) :: c(nspc, nspc), wx(nvec,nvec), vx(nvec,nvec)
+            real(real64), intent(in) :: t(6)
+            real(real64) :: c(6, 6), wx(3,3), vx(3,3)
         !code start
             vx = .x. t(1:3)
             wx = .x. t(4:6)
@@ -233,9 +241,9 @@
         end function        
         
         pure function material_acceleration(a,v,cg) result(acm)
-        real(real64), intent(in) :: a(nspc), v(nspc)
-        real(real64), optional, intent(in) :: cg(nvec)
-        real(real64) :: acm(nvec), acc(nvec), alp(nvec), vee(nvec), omg(nvec)
+        real(real64), intent(in) :: a(6), v(6)
+        real(real64), optional, intent(in) :: cg(3)
+        real(real64) :: acm(3), acc(3), alp(3), vee(3), omg(3)
         
             omg = v(4:6)
             alp = a(4:6)

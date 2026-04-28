@@ -15,11 +15,9 @@
     USE constants
     implicit none
     
-        integer, parameter :: nvec = 3     ! Number of components in a vector
-
         ! Constants for fixed-axis directions
         enum, bind(c)
-			enumerator:: origin  = 0
+            enumerator:: origin  = 0
             enumerator:: x_axis = 1
             enumerator:: y_axis = 2
             enumerator:: z_axis = 3
@@ -50,14 +48,14 @@
         end interface
 
         ! Unit direction vectors
-        real(real64), parameter :: o_(nvec) = [ 0.0d0, 0.0d0, 0.0d0 ]    ! origin: zero vector
-        real(real64), parameter :: i_(nvec) = [ 1.0d0, 0.0d0, 0.0d0 ]    ! unit x-axis, hat[i]
-        real(real64), parameter :: j_(nvec) = [ 0.0d0, 1.0d0, 0.0d0 ]    ! unit y-axis, hat[j]
-        real(real64), parameter :: k_(nvec) = [ 0.0d0, 0.0d0, 1.0d0 ]    ! unit z-axis, hat[k]
+        real(real64), parameter :: o_(3) = [ 0.0d0, 0.0d0, 0.0d0 ]    ! origin: zero vector
+        real(real64), parameter :: i_(3) = [ 1.0d0, 0.0d0, 0.0d0 ]    ! unit x-axis, hat[i]
+        real(real64), parameter :: j_(3) = [ 0.0d0, 1.0d0, 0.0d0 ]    ! unit y-axis, hat[j]
+        real(real64), parameter :: k_(3) = [ 0.0d0, 0.0d0, 1.0d0 ]    ! unit z-axis, hat[k]
         
         ! 3×3 identity matrix. Used for default rotations.
-        real(real64), parameter :: z3_(nvec,nvec) = reshape( [0,0,0, 0,0,0, 0,0,0], [nvec,nvec])
-        real(real64), parameter :: e3_(nvec,nvec) = reshape( [1,0,0, 0,1,0, 0,0,1], [nvec,nvec])
+        real(real64), parameter :: z3_(3,3) = reshape( [0,0,0, 0,0,0, 0,0,0], [3,3])
+        real(real64), parameter :: e3_(3,3) = reshape( [1,0,0, 0,1,0, 0,0,1], [3,3])
     CONTAINS
     !-- LINEAR ALGEBRA ------------------------------
 
@@ -108,7 +106,7 @@
         pure function sumsq(a) result(r)
         implicit none
         !argument specification
-            real(real64), intent(in) :: a(nvec)
+            real(real64), intent(in) :: a(3)
             real(real64) :: r
         !code start
             r = dot_product(a,a)
@@ -118,7 +116,7 @@
         pure function magnitude(a) result(r)
         implicit none
         !argument specification
-            real(real64), intent(in) :: a(nvec)
+            real(real64), intent(in) :: a(3)
             real(real64) :: r
         !code start
             r = dsqrt( dot_product(a,a) )
@@ -129,7 +127,7 @@
         pure function distance(a, b) result(r)
         implicit none
         !argument specification
-            real(real64), intent(in) :: a(nvec), b(nvec)
+            real(real64), intent(in) :: a(3), b(3)
             real(real64) :: r
         !code start
             r = magnitude(b-a)
@@ -139,36 +137,36 @@
         pure function rotate_vector_x(a,theta) result(z)
         implicit none
         !argument specification
-            real(real64), intent(in) :: a(nvec), theta
-            real(real64) :: z(nvec)
+            real(real64), intent(in) :: a(3), theta
+            real(real64) :: z(3)
         !code start
             z = [   a(1), &
-                    dcos(theta)*a(2)-dsin(theta)*a(nvec), &
-                    dsin(theta)*a(2)+dcos(theta)*a(nvec) ]
+                    dcos(theta)*a(2)-dsin(theta)*a(3), &
+                    dsin(theta)*a(2)+dcos(theta)*a(3) ]
         end function
     
         ! Returns the rotated vector A about the Y axis
         pure function rotate_vector_y(a,theta) result(z)
         implicit none
         !argument specification
-            real(real64), intent(in) :: a(nvec), theta
-            real(real64) :: z(nvec)
+            real(real64), intent(in) :: a(3), theta
+            real(real64) :: z(3)
         !code start
-            z = [   dcos(theta)*a(1)+dsin(theta)*a(nvec), &
+            z = [   dcos(theta)*a(1)+dsin(theta)*a(3), &
                     a(2), &
-                    -dsin(theta)*a(1)+dcos(theta)*a(nvec)]
+                    -dsin(theta)*a(1)+dcos(theta)*a(3)]
         end function
     
         ! Returns the rotated vector A about the Z axis
         pure function rotate_vector_z(a,theta) result(z)
         implicit none
         !argument specification
-            real(real64), intent(in) :: a(nvec), theta
-            real(real64) :: z(nvec)
+            real(real64), intent(in) :: a(3), theta
+            real(real64) :: z(3)
         !code start
             z = [   dcos(theta)*a(1)-dsin(theta)*a(2), &
                     dsin(theta)*a(1)+dcos(theta)*a(2), &
-                    a(nvec)]
+                    a(3)]
         end function
         
         ! Elementary 3×3 rotation matrix about the x-axis
@@ -176,7 +174,7 @@
         implicit none
         !argument specification
             real(real64), intent(in) :: theta
-            real(real64) :: r(nvec,nvec)
+            real(real64) :: r(3,3)
         !code start
             r(1:3,1) = [ 1.0d0, 0.0d0, 0.0d0 ]
             r(1:3,2) = [ 0.0d0, dcos(theta), dsin(theta) ]
@@ -188,7 +186,7 @@
         implicit none
         !argument specification
             real(real64), intent(in) :: theta
-            real(real64) :: r(nvec,nvec)
+            real(real64) :: r(3,3)
         !code start
             r(1:3,1) = [ dcos(theta), 0.0d0, -dsin(theta) ]
             r(1:3,2) = [ 0.0d0, 1.0d0, 0.0d0 ]
@@ -200,7 +198,7 @@
         implicit none
         !argument specification
             real(real64), intent(in) :: theta
-            real(real64) :: r(nvec,nvec)
+            real(real64) :: r(3,3)
         !code start
             r(1:3,1) = [dcos(theta), dsin(theta), 0.0d0]
             r(1:3,2) = [-dsin(theta), dcos(theta), 0.0d0]
@@ -212,8 +210,8 @@
         pure function direction(a) result(z)
         implicit none
         !argument specification
-            real(real64), intent(in) :: a(nvec)
-            real(real64) :: z(nvec)
+            real(real64), intent(in) :: a(3)
+            real(real64) :: z(3)
         !local variables
             real(real64) :: mag 
             mag = magnitude(a)
@@ -229,7 +227,7 @@
         pure function vector_angle(a,b) result(theta)
         implicit none
         !argument specification
-            real(real64), intent(in) :: a(nvec), b(nvec)
+            real(real64), intent(in) :: a(3), b(3)
             real(real64) :: theta
         !local variables
             real(real64) :: mag_a, mag_b, mag_axb
@@ -266,7 +264,7 @@
         pure function inner_product_vector(a,b) result(r)
         implicit none
         !argument specification
-            real(real64), intent(in) :: a(nvec), b(nvec)
+            real(real64), intent(in) :: a(3), b(3)
             real(real64) :: r
         !code start
             r = a(1)*b(1)+a(2)*b(2)+a(3)*b(3)
@@ -276,8 +274,8 @@
         pure function outer_product_vector(a,b) result(c)
         implicit none
         !argument specification
-            real(real64), intent(in) :: a(nvec), b(nvec)
-            real(real64) :: c(nvec,nvec)
+            real(real64), intent(in) :: a(3), b(3)
+            real(real64) :: c(3,3)
         !code start
             c(:,1) = a(:)*b(1)
             c(:,2) = a(:)*b(2)
@@ -290,8 +288,8 @@
         pure function cross_product_vector(a,b) result(c)
         implicit none
         !argument specification
-            real(real64), intent(in) :: a(nvec), b(nvec)
-            real(real64) :: c(nvec)
+            real(real64), intent(in) :: a(3), b(3)
+            real(real64) :: c(3)
         !code start
             c = [   a(2)*b(3) - a(3)*b(2), &
                     a(3)*b(1) - a(1)*b(3), &
@@ -303,8 +301,8 @@
         pure function cross_operator_matrix(a) result(c)
         implicit none
         !argument specifications
-            real(real64), intent(in) :: a(nvec)
-            real(real64) :: c(nvec,nvec)
+            real(real64), intent(in) :: a(3)
+            real(real64) :: c(3,3)
         !code start        
             c(:,1) = [ 0.0d0, a(3), -a(2) ]
             c(:,2) = [ -a(3), 0.0d0, a(1) ]
@@ -316,7 +314,7 @@
         !argument specification
             integer(INT32), intent(in) :: axis 
             real(real64), intent(in) :: theta
-            real(real64) :: r(nvec,nvec)
+            real(real64) :: r(3,3)
         !code start
             select case(axis)
             case(x_axis)
@@ -334,7 +332,7 @@
         ! Returns a unit vector pointing along the x, y or z axis depending on this axis constant (1=X, 2=Y, 3=Z, other=0)
         pure function direction_vector(axis) result(z)
         integer(INT32), intent(in) :: axis 
-        real(real64) :: z(nvec)            
+        real(real64) :: z(3)            
             select case(axis)
             case(x_axis)
                 z = i_
@@ -407,38 +405,41 @@
             y = matmul(A,x)+b
         end subroutine
         
-        pure subroutine solve_linear_system_mkl(A, b, x, y, pivot, n, k)
-        use blas95
-        use lapack95
-        real(real64), intent(in) :: A(n,n), b(n)
-        real(real64), intent(inout) :: x(n), y(n)
-        integer(INT32), intent(in) :: pivot(n), n, k
-        integer(INT32) :: u, code, d, indx(n-k)
-        real(real64) :: r(n-k), A1(n-k,n-k), A3(n-k,k), b1(n-k)
-                        
-            u = n-k
-            if(k>0) then
-                
-                A1 = A(pivot(1:u), pivot(1:u))
-                A3 = A(pivot(1:u), pivot(u+1:n))
-                b1 = b(pivot(1:u))
-                
-                r = y(pivot(1:u))-matmul(A3, x(pivot(u+1:n)))-b1
-                call gesv(A1,r,indx,code)
-                !call ludcmp(A1,u,indx,d,code)
-                !call lubksb(A1,u,indx,r)
-                
-                x(pivot(1:u)) = r
-            else if(u>0) then
-                r = y - b
-                A1 = A
-                call gesv(A1,r,indx,code)
-                !call ludcmp(A1,u,indx,d,code)
-                !call lubksb(A1,u,indx,r)
-                x = r
-            end if                            
-            y = matmul(A,x)+b
-        end subroutine
+        !! requires additional depenency on linker of
+        !! mkl_blas95_lp64.lib mkl_lapack95_lp64.lib
+        !!
+        !pure subroutine solve_linear_system_mkl(A, b, x, y, pivot, n, k)
+        !use blas95
+        !use lapack95
+        !real(real64), intent(in) :: A(n,n), b(n)
+        !real(real64), intent(inout) :: x(n), y(n)
+        !integer(INT32), intent(in) :: pivot(n), n, k
+        !integer(INT32) :: u, code, d, indx(n-k)
+        !real(real64) :: r(n-k), A1(n-k,n-k), A3(n-k,k), b1(n-k)
+        !                
+        !    u = n-k
+        !    if(k>0) then
+        !        
+        !        A1 = A(pivot(1:u), pivot(1:u))
+        !        A3 = A(pivot(1:u), pivot(u+1:n))
+        !        b1 = b(pivot(1:u))
+        !        
+        !        r = y(pivot(1:u))-matmul(A3, x(pivot(u+1:n)))-b1
+        !        call gesv(A1,r,indx,code)
+        !        !call ludcmp(A1,u,indx,d,code)
+        !        !call lubksb(A1,u,indx,r)
+        !        
+        !        x(pivot(1:u)) = r
+        !    else if(u>0) then
+        !        r = y - b
+        !        A1 = A
+        !        call gesv(A1,r,indx,code)
+        !        !call ludcmp(A1,u,indx,d,code)
+        !        !call lubksb(A1,u,indx,r)
+        !        x = r
+        !    end if                            
+        !    y = matmul(A,x)+b
+        !end subroutine
         
         
         subroutine test_linear_system()

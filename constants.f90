@@ -23,9 +23,9 @@
         INTEGER, PARAMETER :: i1 = SELECTED_INT_KIND(2)
         INTEGER, PARAMETER :: i2 = SELECTED_INT_KIND(4)
         INTEGER, PARAMETER :: i4 = SELECTED_INT_KIND(9)
-        INTEGER, PARAMETER :: sp = SELECTED_REAL_KIND(6, 37)
-        INTEGER, PARAMETER :: dp = SELECTED_REAL_KIND(15, 307)
-        INTEGER, PARAMETER :: qp = SELECTED_REAL_KIND(32)        
+        INTEGER, PARAMETER :: r4 = SELECTED_REAL_KIND(6, 37)
+        INTEGER, PARAMETER :: r8 = SELECTED_REAL_KIND(15, 307)
+        INTEGER, PARAMETER :: r16 = SELECTED_REAL_KIND(32)        
 
         ! Constants used for various calculations (double precision)
         REAL(real64), PARAMETER :: pi    = 3.1415926535897932D0
