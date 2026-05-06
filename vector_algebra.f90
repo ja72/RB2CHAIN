@@ -53,14 +53,14 @@
         real(real64), parameter :: j_(3) = [ 0.0d0, 1.0d0, 0.0d0 ]    ! unit y-axis, hat[j]
         real(real64), parameter :: k_(3) = [ 0.0d0, 0.0d0, 1.0d0 ]    ! unit z-axis, hat[k]
         
-        ! 3×3 identity matrix. Used for default rotations.
+        ! 3ï¿½3 identity matrix. Used for default rotations.
         real(real64), parameter :: z3_(3,3) = reshape( [0,0,0, 0,0,0, 0,0,0], [3,3])
         real(real64), parameter :: e3_(3,3) = reshape( [1,0,0, 0,1,0, 0,0,1], [3,3])
     CONTAINS
     !-- LINEAR ALGEBRA ------------------------------
 
-        ! Create a n×m identity matrix. 
-        ! NOTE: If m is ommited then create a n×n matrix
+        ! Create a nï¿½m identity matrix. 
+        ! NOTE: If m is ommited then create a nï¿½n matrix
         pure function identity(n, m) result(eye)
         integer(INT32), intent(in) :: n
         integer(INT32), intent(in), optional :: m
@@ -86,7 +86,7 @@
             e(i) = 1
         end function
         
-        ! Create a n×(n-1) matrix from the n×n identity matrix, by removing column i
+        ! Create a nï¿½(n-1) matrix from the nï¿½n identity matrix, by removing column i
         ! NOTE: element_antivector is mutually exclusive to element_vector
         pure function element_antivector(n,i) result(u)
         integer(INT32), intent(in) :: n, i
@@ -169,7 +169,7 @@
                     a(3)]
         end function
         
-        ! Elementary 3×3 rotation matrix about the x-axis
+        ! Elementary 3ï¿½3 rotation matrix about the x-axis
         pure function rotation_x(theta) result(r)
         implicit none
         !argument specification
@@ -181,7 +181,7 @@
             r(1:3,3) = [ 0.0d0, -dsin(theta), dcos(theta) ]
         end function
         
-        ! Elementary 3×3 rotation matrix about the y-axis
+        ! Elementary 3ï¿½3 rotation matrix about the y-axis
         pure function rotation_y(theta) result(r)
         implicit none
         !argument specification
@@ -193,7 +193,7 @@
             r(1:3,3) = [ dsin(theta), 0.0d0, dcos(theta) ]
         end function
         
-        ! Elementary 3×3 rotation matrix about the z-axis
+        ! Elementary 3ï¿½3 rotation matrix about the z-axis
         pure function rotation_z(theta) result(r)
         implicit none
         !argument specification
@@ -270,7 +270,7 @@
             r = a(1)*b(1)+a(2)*b(2)+a(3)*b(3)
         end function
     
-        ! Outer product is a 3×3 matrix with elements c(i,j) = a(i)*b(j)
+        ! Outer product is a 3ï¿½3 matrix with elements c(i,j) = a(i)*b(j)
         pure function outer_product_vector(a,b) result(c)
         implicit none
         !argument specification
@@ -296,7 +296,7 @@
                     a(1)*b(2) - a(2)*b(1) ]
         end function
 
-        ! Returns the 3×3 matrix cross product operator
+        ! Returns the 3ï¿½3 matrix cross product operator
         ! NOTE: Can be used as a prefix operator (.x. a) = CROSS_OPERATOR_MATRIX(a)
         pure function cross_operator_matrix(a) result(c)
         implicit none
@@ -309,7 +309,7 @@
             c(:,3) = [ a(2), -a(1), 0.0d0 ]
         end function
 
-        ! Returns the 3×3 rotation matrix based on the axis constant (1=X, 2=Y, 3=Z) and an angle
+        ! Returns the 3ï¿½3 rotation matrix based on the axis constant (1=X, 2=Y, 3=Z) and an angle
         pure function rotation_matrix(axis, theta) result(r)
         !argument specification
             integer(INT32), intent(in) :: axis 
@@ -405,6 +405,22 @@
             y = matmul(A,x)+b
         end subroutine
         
+        pure subroutine solve_linear_system_full(A, y, x, n, m)
+        ! Solve system of equations y=A*x for all unknowns in x. 
+        ! A is nï¿½n, x and y are nï¿½m. 
+        use lu
+        integer, intent(in),value :: n, m
+        real(real64), intent(in) :: A(n,n), y(n,m)
+        real(real64), intent(out) :: x(n,m)
+        integer :: u, code, d, indx(n)
+        real(real64) :: r(n,m), A1(n,n), b1(n,m)
+            r = y
+            A1 = A
+            call ludcmp(A1,u,indx,d,code)
+            call lubksb(A1,u,indx,r)
+            x = r
+        end subroutine
+        
         !! requires additional depenency on linker of
         !! mkl_blas95_lp64.lib mkl_lapack95_lp64.lib
         !!
@@ -468,13 +484,13 @@
         end subroutine
         
         !***********************************************************************
-        ! Creates a 3×3 rotation matrix based on the axis/angle formula.
+        ! Creates a 3ï¿½3 rotation matrix based on the axis/angle formula.
         ! It uses the rotational velocty vector omg, and the scalar time t
         !
         !   angle = |omg|*t
         !   axis = omg/|omg|
         !
-        !   R = 1 + SIN(angle)*[axis×] + (1-COS(angle))*[axis×]*[axis×]
+        !   R = 1 + SIN(angle)*[axisï¿½] + (1-COS(angle))*[axisï¿½]*[axisï¿½]
         !
         function omega_to_rotation(omg, t) result(R)
             real(real64), intent(in) :: omg(3), t
