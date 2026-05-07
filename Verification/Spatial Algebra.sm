@@ -4,7 +4,7 @@
   <settings ppi="120">
     <identity>
       <id>4f163327-cc1c-4f3c-9ae2-354d8a97b826</id>
-      <revision>23</revision>
+      <revision>25</revision>
     </identity>
     <metadata lang="eng">
       <author>John Alexiou</author>
@@ -1242,7 +1242,7 @@
       </region>
     </region>
     <region top="1404" color="#000000">
-      <area collapsed="true">
+      <area collapsed="false">
         <title lang="eng">
           <content>
             <p>SYSTEM CONFIGURATION</p>
@@ -1265,7 +1265,7 @@
           </input>
         </math>
       </region>
-      <region left="36" top="1458" width="131" height="26" color="#000000" fontSize="10">
+      <region left="288" top="1431" width="131" height="26" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">q</e>
@@ -1276,51 +1276,7 @@
           </input>
         </math>
       </region>
-      <region left="189" top="1458" width="139" height="26" color="#000000" fontSize="10">
-        <math significantDigitsMode="false">
-          <input>
-            <e type="operand">qp</e>
-            <e type="operand">n</e>
-            <e type="operand">1</e>
-            <e type="function" args="2">matrix</e>
-            <e type="operator" args="2">:</e>
-          </input>
-        </math>
-      </region>
-      <region left="351" top="1458" width="67" height="33" color="#000000" fontSize="10">
-        <math significantDigitsMode="false">
-          <input>
-            <e type="operand">qp</e>
-            <e type="operand">n</e>
-            <e type="function" args="2">el</e>
-            <e type="operand">1</e>
-            <e type="operator" args="2">:</e>
-          </input>
-        </math>
-      </region>
-      <region left="432" top="1458" width="131" height="26" color="#000000" fontSize="10">
-        <math significantDigitsMode="false">
-          <input>
-            <e type="operand">Q</e>
-            <e type="operand">n</e>
-            <e type="operand">1</e>
-            <e type="function" args="2">matrix</e>
-            <e type="operator" args="2">:</e>
-          </input>
-        </math>
-      </region>
-      <region left="576" top="1458" width="147" height="26" color="#000000" fontSize="10">
-        <math significantDigitsMode="false">
-          <input>
-            <e type="operand">qpp</e>
-            <e type="operand">n</e>
-            <e type="operand">1</e>
-            <e type="function" args="2">matrix</e>
-            <e type="operator" args="2">:</e>
-          </input>
-        </math>
-      </region>
-      <region left="162" top="1485" width="259" height="93" color="#000000" fontSize="10">
+      <region left="459" top="1431" width="259" height="93" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">I_body</e>
@@ -1350,7 +1306,7 @@
           </input>
         </math>
       </region>
-      <region left="36" top="1494" width="70" height="24" color="#000000" fontSize="10">
+      <region left="36" top="1458" width="70" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">L</e>
@@ -1359,7 +1315,29 @@
           </input>
         </math>
       </region>
-      <region left="36" top="1521" width="62" height="24" color="#000000" fontSize="10">
+      <region left="117" top="1458" width="80" height="24" color="#000000" fontSize="10">
+        <math optimize="2">
+          <input>
+            <e type="operand">c</e>
+            <e type="operand">0.5</e>
+            <e type="operand">L</e>
+            <e type="operator" args="2">*</e>
+            <e type="operator" args="2">:</e>
+          </input>
+        </math>
+      </region>
+      <region left="288" top="1458" width="139" height="26" color="#000000" fontSize="10">
+        <math significantDigitsMode="false">
+          <input>
+            <e type="operand">qp</e>
+            <e type="operand">n</e>
+            <e type="operand">1</e>
+            <e type="function" args="2">matrix</e>
+            <e type="operator" args="2">:</e>
+          </input>
+        </math>
+      </region>
+      <region left="36" top="1485" width="62" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">m</e>
@@ -1368,7 +1346,18 @@
           </input>
         </math>
       </region>
-      <region left="36" top="1548" width="109" height="24" color="#000000" fontSize="10">
+      <region left="288" top="1485" width="131" height="26" color="#000000" fontSize="10">
+        <math significantDigitsMode="false">
+          <input>
+            <e type="operand">Q</e>
+            <e type="operand">n</e>
+            <e type="operand">1</e>
+            <e type="function" args="2">matrix</e>
+            <e type="operator" args="2">:</e>
+          </input>
+        </math>
+      </region>
+      <region left="36" top="1512" width="109" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">gee</e>
@@ -1380,11 +1369,33 @@
           </input>
         </math>
       </region>
-      <region top="1584" color="#000000">
+      <region left="288" top="1512" width="147" height="26" color="#000000" fontSize="10">
+        <math significantDigitsMode="false">
+          <input>
+            <e type="operand">qpp</e>
+            <e type="operand">n</e>
+            <e type="operand">1</e>
+            <e type="function" args="2">matrix</e>
+            <e type="operator" args="2">:</e>
+          </input>
+        </math>
+      </region>
+      <region left="459" top="1512" width="67" height="33" color="#000000" fontSize="10">
+        <math significantDigitsMode="false">
+          <input>
+            <e type="operand">qp</e>
+            <e type="operand">n</e>
+            <e type="function" args="2">el</e>
+            <e type="operand">1</e>
+            <e type="operator" args="2">:</e>
+          </input>
+        </math>
+      </region>
+      <region top="1539" color="#000000">
         <area terminator="true" />
       </region>
     </region>
-    <region top="1611" color="#000000">
+    <region top="1566" color="#000000">
       <area collapsed="true">
         <title lang="eng">
           <content>
@@ -1392,28 +1403,28 @@
           </content>
         </title>
       </area>
-      <region left="36" top="1629" width="99" height="23" color="#000000" fontSize="10" isBreakable="false">
+      <region left="36" top="1584" width="99" height="23" color="#000000" fontSize="10" isBreakable="false">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>Joint Position</p>
           </content>
         </text>
       </region>
-      <region left="234" top="1629" width="122" height="23" color="#000000" fontSize="10" isBreakable="false">
+      <region left="234" top="1584" width="122" height="23" color="#000000" fontSize="10" isBreakable="false">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p style="font-weight: normal;">Body Orientation</p>
           </content>
         </text>
       </region>
-      <region left="549" top="1629" width="112" height="23" color="#000000" fontSize="10">
+      <region left="549" top="1584" width="112" height="23" color="#000000" fontSize="10">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>Center of mass</p>
           </content>
         </text>
       </region>
-      <region left="45" top="1656" width="72" height="24" color="#000000" fontSize="10">
+      <region left="45" top="1611" width="72" height="24" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">r_1</e>
@@ -1422,7 +1433,7 @@
           </input>
         </math>
       </region>
-      <region left="261" top="1656" width="274" height="37" color="#000000" fontSize="10">
+      <region left="261" top="1611" width="274" height="37" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">q_1</e>
@@ -1437,16 +1448,14 @@
           </input>
         </math>
       </region>
-      <region left="549" top="1656" width="221" height="41" color="#000000" fontSize="10">
+      <region left="549" top="1611" width="217" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">cg_1</e>
             <e type="operand">r_1</e>
             <e type="operand">q_1</e>
             <e type="function" args="1">rot</e>
-            <e type="operand">L</e>
-            <e type="operand">2</e>
-            <e type="operator" args="2">/</e>
+            <e type="operand">c</e>
             <e type="operator" args="2">*</e>
             <e type="operand">i_</e>
             <e type="operator" args="2">*</e>
@@ -1455,7 +1464,7 @@
           </input>
         </math>
       </region>
-      <region left="45" top="1692" width="209" height="26" color="#000000" fontSize="10">
+      <region left="45" top="1647" width="209" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">r_2</e>
@@ -1471,7 +1480,7 @@
           </input>
         </math>
       </region>
-      <region left="261" top="1692" width="258" height="37" color="#000000" fontSize="10">
+      <region left="261" top="1647" width="258" height="37" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">q_2</e>
@@ -1486,16 +1495,14 @@
           </input>
         </math>
       </region>
-      <region left="549" top="1692" width="221" height="41" color="#000000" fontSize="10">
+      <region left="549" top="1647" width="217" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">cg_2</e>
             <e type="operand">r_2</e>
             <e type="operand">q_2</e>
             <e type="function" args="1">rot</e>
-            <e type="operand">L</e>
-            <e type="operand">2</e>
-            <e type="operator" args="2">/</e>
+            <e type="operand">c</e>
             <e type="operator" args="2">*</e>
             <e type="operand">i_</e>
             <e type="operator" args="2">*</e>
@@ -1504,7 +1511,7 @@
           </input>
         </math>
       </region>
-      <region left="45" top="1728" width="209" height="26" color="#000000" fontSize="10">
+      <region left="45" top="1683" width="209" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">r_3</e>
@@ -1520,7 +1527,7 @@
           </input>
         </math>
       </region>
-      <region left="261" top="1728" width="258" height="37" color="#000000" fontSize="10">
+      <region left="261" top="1683" width="258" height="37" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">q_3</e>
@@ -1535,16 +1542,14 @@
           </input>
         </math>
       </region>
-      <region left="549" top="1728" width="221" height="41" color="#000000" fontSize="10">
+      <region left="549" top="1683" width="217" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">cg_3</e>
             <e type="operand">r_3</e>
             <e type="operand">q_3</e>
             <e type="function" args="1">rot</e>
-            <e type="operand">L</e>
-            <e type="operand">2</e>
-            <e type="operator" args="2">/</e>
+            <e type="operand">c</e>
             <e type="operator" args="2">*</e>
             <e type="operand">i_</e>
             <e type="operator" args="2">*</e>
@@ -1553,7 +1558,7 @@
           </input>
         </math>
       </region>
-      <region left="45" top="1764" width="209" height="26" color="#000000" fontSize="10">
+      <region left="45" top="1719" width="209" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">r_4</e>
@@ -1569,7 +1574,7 @@
           </input>
         </math>
       </region>
-      <region left="261" top="1764" width="258" height="37" color="#000000" fontSize="10">
+      <region left="261" top="1719" width="258" height="37" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">q_4</e>
@@ -1584,16 +1589,14 @@
           </input>
         </math>
       </region>
-      <region left="549" top="1764" width="221" height="41" color="#000000" fontSize="10">
+      <region left="549" top="1719" width="217" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">cg_4</e>
             <e type="operand">r_4</e>
             <e type="operand">q_4</e>
             <e type="function" args="1">rot</e>
-            <e type="operand">L</e>
-            <e type="operand">2</e>
-            <e type="operator" args="2">/</e>
+            <e type="operand">c</e>
             <e type="operator" args="2">*</e>
             <e type="operand">i_</e>
             <e type="operator" args="2">*</e>
@@ -1602,7 +1605,7 @@
           </input>
         </math>
       </region>
-      <region left="45" top="1800" width="209" height="26" color="#000000" fontSize="10">
+      <region left="45" top="1755" width="209" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">r_5</e>
@@ -1618,7 +1621,7 @@
           </input>
         </math>
       </region>
-      <region left="261" top="1800" width="258" height="37" color="#000000" fontSize="10">
+      <region left="261" top="1755" width="258" height="37" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">q_5</e>
@@ -1633,16 +1636,14 @@
           </input>
         </math>
       </region>
-      <region left="549" top="1800" width="221" height="41" color="#000000" fontSize="10">
+      <region left="549" top="1755" width="217" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">cg_5</e>
             <e type="operand">r_5</e>
             <e type="operand">q_5</e>
             <e type="function" args="1">rot</e>
-            <e type="operand">L</e>
-            <e type="operand">2</e>
-            <e type="operator" args="2">/</e>
+            <e type="operand">c</e>
             <e type="operator" args="2">*</e>
             <e type="operand">i_</e>
             <e type="operator" args="2">*</e>
@@ -1651,7 +1652,7 @@
           </input>
         </math>
       </region>
-      <region left="45" top="1836" width="209" height="26" color="#000000" fontSize="10">
+      <region left="45" top="1791" width="209" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">r_6</e>
@@ -1667,7 +1668,7 @@
           </input>
         </math>
       </region>
-      <region left="261" top="1836" width="258" height="37" color="#000000" fontSize="10">
+      <region left="261" top="1791" width="258" height="37" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">q_6</e>
@@ -1682,16 +1683,14 @@
           </input>
         </math>
       </region>
-      <region left="549" top="1836" width="221" height="41" color="#000000" fontSize="10">
+      <region left="549" top="1791" width="217" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">cg_6</e>
             <e type="operand">r_6</e>
             <e type="operand">q_6</e>
             <e type="function" args="1">rot</e>
-            <e type="operand">L</e>
-            <e type="operand">2</e>
-            <e type="operator" args="2">/</e>
+            <e type="operand">c</e>
             <e type="operator" args="2">*</e>
             <e type="operand">i_</e>
             <e type="operator" args="2">*</e>
@@ -1700,11 +1699,11 @@
           </input>
         </math>
       </region>
-      <region top="1872" color="#000000">
+      <region top="1827" color="#000000">
         <area terminator="true" />
       </region>
     </region>
-    <region top="1899" color="#000000">
+    <region top="1854" color="#000000">
       <area collapsed="true">
         <title lang="eng">
           <content>
@@ -1712,7 +1711,7 @@
           </content>
         </title>
       </area>
-      <region left="36" top="1917" width="112" height="24" color="#000000" fontSize="10">
+      <region left="36" top="1872" width="112" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">v_0</e>
@@ -1721,35 +1720,35 @@
           </input>
         </math>
       </region>
-      <region left="180" top="1917" width="114" height="23" color="#000000" fontSize="10">
+      <region left="180" top="1872" width="114" height="23" color="#000000" fontSize="10">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>ground velocity</p>
           </content>
         </text>
       </region>
-      <region left="27" top="1944" width="74" height="23" color="#000000" fontSize="10">
+      <region left="27" top="1899" width="74" height="23" color="#000000" fontSize="10">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>joint axis</p>
           </content>
         </text>
       </region>
-      <region left="252" top="1944" width="98" height="23" color="#000000" fontSize="10">
+      <region left="252" top="1899" width="98" height="23" color="#000000" fontSize="10">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>velocity twist</p>
           </content>
         </text>
       </region>
-      <region left="522" top="1944" width="122" height="23" color="#000000" fontSize="10">
+      <region left="522" top="1899" width="122" height="23" color="#000000" fontSize="10">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>bias acceleration</p>
           </content>
         </text>
       </region>
-      <region left="27" top="1971" width="167" height="26" color="#000000" fontSize="10">
+      <region left="27" top="1926" width="167" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">s_1</e>
@@ -1760,7 +1759,7 @@
           </input>
         </math>
       </region>
-      <region left="252" top="1971" width="160" height="33" color="#000000" fontSize="10">
+      <region left="252" top="1926" width="160" height="33" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">v_1</e>
@@ -1775,7 +1774,7 @@
           </input>
         </math>
       </region>
-      <region left="522" top="1971" width="240" height="35" color="#000000" fontSize="10">
+      <region left="522" top="1926" width="240" height="35" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">κ_1</e>
@@ -1789,7 +1788,7 @@
           </input>
         </math>
       </region>
-      <region left="27" top="2007" width="167" height="26" color="#000000" fontSize="10">
+      <region left="27" top="1962" width="167" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">s_2</e>
@@ -1800,7 +1799,7 @@
           </input>
         </math>
       </region>
-      <region left="252" top="2007" width="160" height="33" color="#000000" fontSize="10">
+      <region left="252" top="1962" width="160" height="33" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">v_2</e>
@@ -1815,7 +1814,7 @@
           </input>
         </math>
       </region>
-      <region left="522" top="2007" width="240" height="35" color="#000000" fontSize="10">
+      <region left="522" top="1962" width="240" height="35" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">κ_2</e>
@@ -1829,7 +1828,7 @@
           </input>
         </math>
       </region>
-      <region left="27" top="2043" width="167" height="26" color="#000000" fontSize="10">
+      <region left="27" top="1998" width="167" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">s_3</e>
@@ -1840,7 +1839,7 @@
           </input>
         </math>
       </region>
-      <region left="252" top="2043" width="160" height="33" color="#000000" fontSize="10">
+      <region left="252" top="1998" width="160" height="33" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">v_3</e>
@@ -1855,7 +1854,7 @@
           </input>
         </math>
       </region>
-      <region left="522" top="2043" width="240" height="35" color="#000000" fontSize="10">
+      <region left="522" top="1998" width="240" height="35" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">κ_3</e>
@@ -1869,7 +1868,7 @@
           </input>
         </math>
       </region>
-      <region left="27" top="2079" width="167" height="26" color="#000000" fontSize="10">
+      <region left="27" top="2034" width="167" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">s_4</e>
@@ -1880,7 +1879,7 @@
           </input>
         </math>
       </region>
-      <region left="252" top="2079" width="160" height="33" color="#000000" fontSize="10">
+      <region left="252" top="2034" width="160" height="33" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">v_4</e>
@@ -1895,7 +1894,7 @@
           </input>
         </math>
       </region>
-      <region left="522" top="2079" width="240" height="35" color="#000000" fontSize="10">
+      <region left="522" top="2034" width="240" height="35" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">κ_4</e>
@@ -1909,7 +1908,7 @@
           </input>
         </math>
       </region>
-      <region left="27" top="2115" width="167" height="26" color="#000000" fontSize="10">
+      <region left="27" top="2070" width="167" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">s_5</e>
@@ -1920,7 +1919,7 @@
           </input>
         </math>
       </region>
-      <region left="252" top="2115" width="160" height="33" color="#000000" fontSize="10">
+      <region left="252" top="2070" width="160" height="33" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">v_5</e>
@@ -1935,7 +1934,7 @@
           </input>
         </math>
       </region>
-      <region left="522" top="2115" width="240" height="35" color="#000000" fontSize="10">
+      <region left="522" top="2070" width="240" height="35" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">κ_5</e>
@@ -1949,7 +1948,7 @@
           </input>
         </math>
       </region>
-      <region left="27" top="2151" width="167" height="26" color="#000000" fontSize="10">
+      <region left="27" top="2106" width="167" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">s_6</e>
@@ -1960,7 +1959,7 @@
           </input>
         </math>
       </region>
-      <region left="252" top="2151" width="160" height="33" color="#000000" fontSize="10">
+      <region left="252" top="2106" width="160" height="33" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">v_6</e>
@@ -1975,7 +1974,7 @@
           </input>
         </math>
       </region>
-      <region left="522" top="2151" width="240" height="35" color="#000000" fontSize="10">
+      <region left="522" top="2106" width="240" height="35" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">κ_6</e>
@@ -1989,11 +1988,11 @@
           </input>
         </math>
       </region>
-      <region top="2187" color="#000000">
+      <region top="2142" color="#000000">
         <area terminator="true" />
       </region>
     </region>
-    <region top="2214" color="#000000">
+    <region top="2169" color="#000000">
       <area collapsed="true">
         <title lang="eng">
           <content>
@@ -2001,28 +2000,28 @@
           </content>
         </title>
       </area>
-      <region left="27" top="2241" width="149" height="23" color="#000000" fontSize="10">
+      <region left="27" top="2196" width="149" height="23" color="#000000" fontSize="10">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>spatial inertia matrix</p>
           </content>
         </text>
       </region>
-      <region left="342" top="2241" width="84" height="23" color="#000000" fontSize="10">
+      <region left="342" top="2196" width="84" height="23" color="#000000" fontSize="10">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>bias forces</p>
           </content>
         </text>
       </region>
-      <region left="558" top="2241" width="108" height="23" color="#000000" fontSize="10">
+      <region left="558" top="2196" width="108" height="23" color="#000000" fontSize="10">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>weight wrench</p>
           </content>
         </text>
       </region>
-      <region left="27" top="2268" width="301" height="28" color="#000000" fontSize="10">
+      <region left="27" top="2223" width="301" height="28" color="#000000" fontSize="10">
         <math optimize="2" decimalPlaces="5" significantDigitsMode="false" exponentialThreshold="4">
           <input>
             <e type="operand">I_1</e>
@@ -2036,7 +2035,7 @@
           </input>
         </math>
       </region>
-      <region left="342" top="2268" width="199" height="26" color="#000000" fontSize="10">
+      <region left="342" top="2223" width="199" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">p_1</e>
@@ -2047,7 +2046,7 @@
           </input>
         </math>
       </region>
-      <region left="558" top="2268" width="210" height="26" color="#000000" fontSize="10">
+      <region left="558" top="2223" width="210" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">w_1</e>
@@ -2060,7 +2059,7 @@
           </input>
         </math>
       </region>
-      <region left="27" top="2295" width="301" height="28" color="#000000" fontSize="10">
+      <region left="27" top="2250" width="301" height="28" color="#000000" fontSize="10">
         <math optimize="2" decimalPlaces="5" significantDigitsMode="false" exponentialThreshold="4">
           <input>
             <e type="operand">I_2</e>
@@ -2074,7 +2073,7 @@
           </input>
         </math>
       </region>
-      <region left="342" top="2295" width="199" height="26" color="#000000" fontSize="10">
+      <region left="342" top="2250" width="199" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">p_2</e>
@@ -2085,7 +2084,7 @@
           </input>
         </math>
       </region>
-      <region left="558" top="2295" width="210" height="26" color="#000000" fontSize="10">
+      <region left="558" top="2250" width="210" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">w_2</e>
@@ -2098,7 +2097,7 @@
           </input>
         </math>
       </region>
-      <region left="27" top="2322" width="301" height="28" color="#000000" fontSize="10">
+      <region left="27" top="2277" width="301" height="28" color="#000000" fontSize="10">
         <math optimize="2" decimalPlaces="5" significantDigitsMode="false" exponentialThreshold="4">
           <input>
             <e type="operand">I_3</e>
@@ -2112,7 +2111,7 @@
           </input>
         </math>
       </region>
-      <region left="342" top="2322" width="199" height="26" color="#000000" fontSize="10">
+      <region left="342" top="2277" width="199" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">p_3</e>
@@ -2123,7 +2122,7 @@
           </input>
         </math>
       </region>
-      <region left="558" top="2322" width="210" height="26" color="#000000" fontSize="10">
+      <region left="558" top="2277" width="210" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">w_3</e>
@@ -2136,7 +2135,7 @@
           </input>
         </math>
       </region>
-      <region left="27" top="2349" width="301" height="28" color="#000000" fontSize="10">
+      <region left="27" top="2304" width="301" height="28" color="#000000" fontSize="10">
         <math optimize="2" decimalPlaces="5" significantDigitsMode="false" exponentialThreshold="4">
           <input>
             <e type="operand">I_4</e>
@@ -2150,7 +2149,7 @@
           </input>
         </math>
       </region>
-      <region left="342" top="2349" width="199" height="26" color="#000000" fontSize="10">
+      <region left="342" top="2304" width="199" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">p_4</e>
@@ -2161,7 +2160,7 @@
           </input>
         </math>
       </region>
-      <region left="558" top="2349" width="210" height="26" color="#000000" fontSize="10">
+      <region left="558" top="2304" width="210" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">w_4</e>
@@ -2174,7 +2173,7 @@
           </input>
         </math>
       </region>
-      <region left="27" top="2376" width="301" height="28" color="#000000" fontSize="10">
+      <region left="27" top="2331" width="301" height="28" color="#000000" fontSize="10">
         <math optimize="2" decimalPlaces="5" significantDigitsMode="false" exponentialThreshold="4">
           <input>
             <e type="operand">I_5</e>
@@ -2188,7 +2187,7 @@
           </input>
         </math>
       </region>
-      <region left="342" top="2376" width="199" height="26" color="#000000" fontSize="10">
+      <region left="342" top="2331" width="199" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">p_5</e>
@@ -2199,7 +2198,7 @@
           </input>
         </math>
       </region>
-      <region left="558" top="2376" width="210" height="26" color="#000000" fontSize="10">
+      <region left="558" top="2331" width="210" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">w_5</e>
@@ -2212,7 +2211,7 @@
           </input>
         </math>
       </region>
-      <region left="27" top="2403" width="301" height="28" color="#000000" fontSize="10">
+      <region left="27" top="2358" width="301" height="28" color="#000000" fontSize="10">
         <math optimize="2" decimalPlaces="5" significantDigitsMode="false" exponentialThreshold="4">
           <input>
             <e type="operand">I_6</e>
@@ -2226,7 +2225,7 @@
           </input>
         </math>
       </region>
-      <region left="342" top="2403" width="199" height="26" color="#000000" fontSize="10">
+      <region left="342" top="2358" width="199" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">p_6</e>
@@ -2237,7 +2236,7 @@
           </input>
         </math>
       </region>
-      <region left="558" top="2403" width="210" height="26" color="#000000" fontSize="10">
+      <region left="558" top="2358" width="210" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">w_6</e>
@@ -2250,11 +2249,11 @@
           </input>
         </math>
       </region>
-      <region top="2439" color="#000000">
+      <region top="2394" color="#000000">
         <area terminator="true" />
       </region>
     </region>
-    <region top="2466" color="#000000">
+    <region top="2421" color="#000000">
       <area collapsed="true">
         <title lang="eng">
           <content>
@@ -2262,28 +2261,28 @@
           </content>
         </title>
       </area>
-      <region left="18" top="2493" width="55" height="23" color="#000000" fontSize="10">
+      <region left="18" top="2448" width="55" height="23" color="#000000" fontSize="10">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>inertia</p>
           </content>
         </text>
       </region>
-      <region left="207" top="2493" width="84" height="23" color="#000000" fontSize="10">
+      <region left="207" top="2448" width="84" height="23" color="#000000" fontSize="10">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>percussion</p>
           </content>
         </text>
       </region>
-      <region left="450" top="2493" width="107" height="23" color="#000000" fontSize="10">
+      <region left="450" top="2448" width="107" height="23" color="#000000" fontSize="10">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>reaction space</p>
           </content>
         </text>
       </region>
-      <region left="18" top="2520" width="80" height="24" color="#000000" fontSize="10">
+      <region left="18" top="2475" width="80" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">A_6</e>
@@ -2292,7 +2291,7 @@
           </input>
         </math>
       </region>
-      <region left="207" top="2520" width="210" height="26" color="#000000" fontSize="10">
+      <region left="207" top="2475" width="210" height="26" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">T_6</e>
@@ -2305,7 +2304,7 @@
           </input>
         </math>
       </region>
-      <region left="450" top="2520" width="288" height="26" color="#000000" fontSize="10">
+      <region left="450" top="2475" width="288" height="26" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">RU_6</e>
@@ -2318,7 +2317,7 @@
           </input>
         </math>
       </region>
-      <region left="18" top="2547" width="165" height="24" color="#000000" fontSize="10">
+      <region left="18" top="2502" width="165" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">A_5</e>
@@ -2331,7 +2330,7 @@
           </input>
         </math>
       </region>
-      <region left="207" top="2547" width="210" height="26" color="#000000" fontSize="10">
+      <region left="207" top="2502" width="210" height="26" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">T_5</e>
@@ -2344,7 +2343,7 @@
           </input>
         </math>
       </region>
-      <region left="450" top="2547" width="288" height="26" color="#000000" fontSize="10">
+      <region left="450" top="2502" width="288" height="26" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">RU_5</e>
@@ -2357,7 +2356,7 @@
           </input>
         </math>
       </region>
-      <region left="18" top="2574" width="165" height="24" color="#000000" fontSize="10">
+      <region left="18" top="2529" width="165" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">A_4</e>
@@ -2370,7 +2369,7 @@
           </input>
         </math>
       </region>
-      <region left="207" top="2574" width="210" height="26" color="#000000" fontSize="10">
+      <region left="207" top="2529" width="210" height="26" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">T_4</e>
@@ -2383,7 +2382,7 @@
           </input>
         </math>
       </region>
-      <region left="450" top="2574" width="288" height="26" color="#000000" fontSize="10">
+      <region left="450" top="2529" width="288" height="26" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">RU_4</e>
@@ -2396,7 +2395,7 @@
           </input>
         </math>
       </region>
-      <region left="18" top="2601" width="165" height="24" color="#000000" fontSize="10">
+      <region left="18" top="2556" width="165" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">A_3</e>
@@ -2409,7 +2408,7 @@
           </input>
         </math>
       </region>
-      <region left="207" top="2601" width="210" height="26" color="#000000" fontSize="10">
+      <region left="207" top="2556" width="210" height="26" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">T_3</e>
@@ -2422,7 +2421,7 @@
           </input>
         </math>
       </region>
-      <region left="450" top="2601" width="288" height="26" color="#000000" fontSize="10">
+      <region left="450" top="2556" width="288" height="26" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">RU_3</e>
@@ -2435,7 +2434,7 @@
           </input>
         </math>
       </region>
-      <region left="18" top="2628" width="165" height="24" color="#000000" fontSize="10">
+      <region left="18" top="2583" width="165" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">A_2</e>
@@ -2448,7 +2447,7 @@
           </input>
         </math>
       </region>
-      <region left="207" top="2628" width="210" height="26" color="#000000" fontSize="10">
+      <region left="207" top="2583" width="210" height="26" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">T_2</e>
@@ -2461,7 +2460,7 @@
           </input>
         </math>
       </region>
-      <region left="450" top="2628" width="288" height="26" color="#000000" fontSize="10">
+      <region left="450" top="2583" width="288" height="26" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">RU_2</e>
@@ -2474,7 +2473,7 @@
           </input>
         </math>
       </region>
-      <region left="18" top="2655" width="165" height="24" color="#000000" fontSize="10">
+      <region left="18" top="2610" width="165" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">A_1</e>
@@ -2487,7 +2486,7 @@
           </input>
         </math>
       </region>
-      <region left="207" top="2655" width="210" height="26" color="#000000" fontSize="10">
+      <region left="207" top="2610" width="210" height="26" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">T_1</e>
@@ -2500,7 +2499,7 @@
           </input>
         </math>
       </region>
-      <region left="450" top="2655" width="288" height="26" color="#000000" fontSize="10">
+      <region left="450" top="2610" width="288" height="26" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">RU_1</e>
@@ -2513,14 +2512,14 @@
           </input>
         </math>
       </region>
-      <region left="18" top="2691" width="84" height="23" color="#000000" fontSize="10">
+      <region left="18" top="2646" width="84" height="23" color="#000000" fontSize="10">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>bias forces</p>
           </content>
         </text>
       </region>
-      <region left="18" top="2718" width="120" height="24" color="#000000" fontSize="10">
+      <region left="18" top="2673" width="120" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">d_6</e>
@@ -2531,7 +2530,7 @@
           </input>
         </math>
       </region>
-      <region left="18" top="2745" width="366" height="34" color="#000000" fontSize="10">
+      <region left="18" top="2700" width="366" height="34" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">d_5</e>
@@ -2557,7 +2556,7 @@
           </input>
         </math>
       </region>
-      <region left="18" top="2772" width="366" height="34" color="#000000" fontSize="10">
+      <region left="18" top="2727" width="366" height="34" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">d_4</e>
@@ -2583,7 +2582,7 @@
           </input>
         </math>
       </region>
-      <region left="18" top="2799" width="366" height="34" color="#000000" fontSize="10">
+      <region left="18" top="2754" width="366" height="34" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">d_3</e>
@@ -2609,7 +2608,7 @@
           </input>
         </math>
       </region>
-      <region left="18" top="2826" width="366" height="34" color="#000000" fontSize="10">
+      <region left="18" top="2781" width="366" height="34" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">d_2</e>
@@ -2635,7 +2634,7 @@
           </input>
         </math>
       </region>
-      <region left="18" top="2853" width="366" height="34" color="#000000" fontSize="10">
+      <region left="18" top="2808" width="366" height="34" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">d_1</e>
@@ -2661,11 +2660,11 @@
           </input>
         </math>
       </region>
-      <region top="2889" color="#000000">
+      <region top="2844" color="#000000">
         <area terminator="true" />
       </region>
     </region>
-    <region top="2916" color="#000000">
+    <region top="2871" color="#000000">
       <area collapsed="false">
         <title lang="eng">
           <content>
@@ -2673,7 +2672,7 @@
           </content>
         </title>
       </area>
-      <region left="18" top="2934" width="112" height="24" color="#000000" fontSize="10">
+      <region left="18" top="2889" width="112" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">a_0</e>
@@ -2682,35 +2681,35 @@
           </input>
         </math>
       </region>
-      <region left="162" top="2934" width="143" height="23" color="#000000" fontSize="10">
+      <region left="162" top="2889" width="143" height="23" color="#000000" fontSize="10">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>ground acceleration</p>
           </content>
         </text>
       </region>
-      <region left="18" top="2970" width="125" height="23" color="#000000" fontSize="10">
+      <region left="18" top="2925" width="125" height="23" color="#000000" fontSize="10">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>joint acceleration</p>
           </content>
         </text>
       </region>
-      <region left="387" top="2970" width="128" height="23" color="#000000" fontSize="10">
+      <region left="387" top="2925" width="128" height="23" color="#000000" fontSize="10">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>body acceleration</p>
           </content>
         </text>
       </region>
-      <region left="612" top="2970" width="83" height="23" color="#000000" fontSize="10">
+      <region left="612" top="2925" width="83" height="23" color="#000000" fontSize="10">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>body force</p>
           </content>
         </text>
       </region>
-      <region left="18" top="2997" width="357" height="54" color="#000000" fontSize="10">
+      <region left="18" top="2952" width="357" height="54" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">qpp</e>
@@ -2740,7 +2739,7 @@
           </input>
         </math>
       </region>
-      <region left="387" top="3006" width="210" height="33" color="#000000" fontSize="10">
+      <region left="387" top="2961" width="210" height="33" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">a_1</e>
@@ -2757,7 +2756,7 @@
           </input>
         </math>
       </region>
-      <region left="612" top="3006" width="157" height="24" color="#000000" fontSize="10">
+      <region left="612" top="2961" width="157" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">f_1</e>
@@ -2770,7 +2769,7 @@
           </input>
         </math>
       </region>
-      <region left="18" top="3051" width="357" height="54" color="#000000" fontSize="10">
+      <region left="18" top="3006" width="357" height="54" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">qpp</e>
@@ -2800,7 +2799,7 @@
           </input>
         </math>
       </region>
-      <region left="387" top="3060" width="210" height="33" color="#000000" fontSize="10">
+      <region left="387" top="3015" width="210" height="33" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">a_2</e>
@@ -2817,7 +2816,7 @@
           </input>
         </math>
       </region>
-      <region left="612" top="3060" width="157" height="24" color="#000000" fontSize="10">
+      <region left="612" top="3015" width="157" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">f_2</e>
@@ -2830,7 +2829,7 @@
           </input>
         </math>
       </region>
-      <region left="18" top="3105" width="357" height="54" color="#000000" fontSize="10">
+      <region left="18" top="3060" width="357" height="54" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">qpp</e>
@@ -2860,7 +2859,7 @@
           </input>
         </math>
       </region>
-      <region left="387" top="3114" width="210" height="33" color="#000000" fontSize="10">
+      <region left="387" top="3069" width="210" height="33" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">a_3</e>
@@ -2877,7 +2876,7 @@
           </input>
         </math>
       </region>
-      <region left="612" top="3114" width="157" height="24" color="#000000" fontSize="10">
+      <region left="612" top="3069" width="157" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">f_3</e>
@@ -2890,7 +2889,7 @@
           </input>
         </math>
       </region>
-      <region left="18" top="3159" width="357" height="54" color="#000000" fontSize="10">
+      <region left="18" top="3114" width="357" height="54" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">qpp</e>
@@ -2920,7 +2919,7 @@
           </input>
         </math>
       </region>
-      <region left="387" top="3168" width="210" height="33" color="#000000" fontSize="10">
+      <region left="387" top="3123" width="210" height="33" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">a_4</e>
@@ -2937,7 +2936,7 @@
           </input>
         </math>
       </region>
-      <region left="612" top="3168" width="157" height="24" color="#000000" fontSize="10">
+      <region left="612" top="3123" width="157" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">f_4</e>
@@ -2950,7 +2949,7 @@
           </input>
         </math>
       </region>
-      <region left="18" top="3213" width="357" height="54" color="#000000" fontSize="10">
+      <region left="18" top="3168" width="357" height="54" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">qpp</e>
@@ -2980,7 +2979,7 @@
           </input>
         </math>
       </region>
-      <region left="387" top="3222" width="210" height="33" color="#000000" fontSize="10">
+      <region left="387" top="3177" width="210" height="33" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">a_5</e>
@@ -2997,7 +2996,7 @@
           </input>
         </math>
       </region>
-      <region left="612" top="3222" width="157" height="24" color="#000000" fontSize="10">
+      <region left="612" top="3177" width="157" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">f_5</e>
@@ -3010,7 +3009,7 @@
           </input>
         </math>
       </region>
-      <region left="18" top="3267" width="357" height="54" color="#000000" fontSize="10">
+      <region left="18" top="3222" width="357" height="54" color="#000000" fontSize="10">
         <math optimize="2" significantDigitsMode="false">
           <input>
             <e type="operand">qpp</e>
@@ -3040,7 +3039,7 @@
           </input>
         </math>
       </region>
-      <region left="387" top="3276" width="210" height="33" color="#000000" fontSize="10">
+      <region left="387" top="3231" width="210" height="33" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">a_6</e>
@@ -3057,7 +3056,7 @@
           </input>
         </math>
       </region>
-      <region left="612" top="3276" width="157" height="24" color="#000000" fontSize="10">
+      <region left="612" top="3231" width="157" height="24" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">f_6</e>
@@ -3070,14 +3069,32 @@
           </input>
         </math>
       </region>
-      <region left="18" top="3330" width="226" height="23" color="#000000" fontSize="10">
+      <region left="18" top="3285" width="226" height="23" color="#000000" fontSize="10">
         <text lang="eng" fontFamily="Lucida Sans" fontSize="10">
           <content>
             <p>joint acceleration solution vector</p>
           </content>
         </text>
       </region>
-      <region left="36" top="3357" width="120" height="118" color="#000000" fontSize="10">
+      <region left="459" top="3294" width="193" height="69" color="#000000" fontSize="10">
+        <math decimalPlaces="6">
+          <input>
+            <e type="operand">I_body</e>
+            <e type="operand">1</e>
+            <e type="operand">1</e>
+            <e type="function" args="3">el</e>
+            <e type="operand">m</e>
+            <e type="operator" args="2">/</e>
+            <e type="function" args="1">sqrt</e>
+            <e type="operand">L</e>
+            <e type="operator" args="2">/</e>
+          </input>
+          <result action="numeric">
+            <e type="operand">0.0454304</e>
+          </result>
+        </math>
+      </region>
+      <region left="36" top="3312" width="120" height="118" color="#000000" fontSize="10">
         <math>
           <input>
             <e type="operand">qpp</e>
@@ -3098,11 +3115,45 @@
           </result>
         </math>
       </region>
-      <region top="3492" color="#000000">
+      <region left="243" top="3339" width="145" height="69" color="#000000" fontSize="10">
+        <math>
+          <input>
+            <e type="operand">qpp</e>
+            <e type="operand">i</e>
+            <e type="function" args="2">el</e>
+            <e type="operand">i</e>
+            <e type="operand">1</e>
+            <e type="operand">n</e>
+            <e type="function" args="4">sum</e>
+          </input>
+          <result action="numeric">
+            <e type="operand">0.0815</e>
+          </result>
+        </math>
+      </region>
+      <region left="459" top="3366" width="193" height="69" color="#000000" fontSize="10">
+        <math decimalPlaces="7">
+          <input>
+            <e type="operand">I_body</e>
+            <e type="operand">2</e>
+            <e type="operand">2</e>
+            <e type="function" args="3">el</e>
+            <e type="operand">m</e>
+            <e type="operator" args="2">/</e>
+            <e type="function" args="1">sqrt</e>
+            <e type="operand">L</e>
+            <e type="operator" args="2">/</e>
+          </input>
+          <result action="numeric">
+            <e type="operand">0.3209035</e>
+          </result>
+        </math>
+      </region>
+      <region top="3447" color="#000000">
         <area terminator="true" />
       </region>
     </region>
-    <region top="3519" color="#000000">
+    <region top="3474" color="#000000">
       <area collapsed="true">
         <title lang="eng">
           <content>
@@ -3110,7 +3161,7 @@
           </content>
         </title>
       </area>
-      <region left="18" top="3537" width="450" height="36" color="#000000" fontSize="10">
+      <region left="18" top="3492" width="450" height="36" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">f_1</e>
@@ -3139,7 +3190,7 @@
           </result>
         </math>
       </region>
-      <region left="18" top="3573" width="450" height="36" color="#000000" fontSize="10">
+      <region left="18" top="3528" width="450" height="36" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">f_2</e>
@@ -3168,7 +3219,7 @@
           </result>
         </math>
       </region>
-      <region left="18" top="3609" width="450" height="36" color="#000000" fontSize="10">
+      <region left="18" top="3564" width="450" height="36" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">f_3</e>
@@ -3197,7 +3248,7 @@
           </result>
         </math>
       </region>
-      <region left="18" top="3645" width="450" height="36" color="#000000" fontSize="10">
+      <region left="18" top="3600" width="450" height="36" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">f_4</e>
@@ -3226,7 +3277,7 @@
           </result>
         </math>
       </region>
-      <region left="18" top="3681" width="450" height="36" color="#000000" fontSize="10">
+      <region left="18" top="3636" width="450" height="36" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">f_5</e>
@@ -3255,7 +3306,7 @@
           </result>
         </math>
       </region>
-      <region left="18" top="3717" width="409" height="36" color="#000000" fontSize="10">
+      <region left="18" top="3672" width="409" height="36" color="#000000" fontSize="10">
         <math significantDigitsMode="false">
           <input>
             <e type="operand">f_6</e>
@@ -3282,11 +3333,11 @@
           </result>
         </math>
       </region>
-      <region top="3762" color="#000000">
+      <region top="3717" color="#000000">
         <area terminator="true" />
       </region>
     </region>
-    <region left="9" top="3798" width="483" height="132" color="#000000" fontSize="10">
+    <region left="9" top="3753" width="483" height="132" color="#000000" fontSize="10">
       <math decimalPlaces="6" significantDigitsMode="false">
         <input>
           <e type="operand">I_1</e>
@@ -3353,7 +3404,7 @@
         </result>
       </math>
     </region>
-    <region left="513" top="3798" width="90" height="123" color="#000000" fontSize="10">
+    <region left="513" top="3753" width="90" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">s_1</e>
@@ -3377,7 +3428,7 @@
         </result>
       </math>
     </region>
-    <region left="630" top="3798" width="135" height="123" color="#000000" fontSize="10">
+    <region left="630" top="3753" width="135" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">w_1</e>
@@ -3403,7 +3454,7 @@
         </result>
       </math>
     </region>
-    <region left="9" top="3942" width="483" height="132" color="#000000" fontSize="10">
+    <region left="9" top="3897" width="483" height="132" color="#000000" fontSize="10">
       <math decimalPlaces="6" significantDigitsMode="false">
         <input>
           <e type="operand">I_2</e>
@@ -3470,7 +3521,7 @@
         </result>
       </math>
     </region>
-    <region left="495" top="3942" width="127" height="123" color="#000000" fontSize="10">
+    <region left="495" top="3897" width="127" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">s_2</e>
@@ -3495,7 +3546,7 @@
         </result>
       </math>
     </region>
-    <region left="630" top="3942" width="135" height="123" color="#000000" fontSize="10">
+    <region left="630" top="3897" width="135" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">w_2</e>
@@ -3521,7 +3572,7 @@
         </result>
       </math>
     </region>
-    <region left="9" top="4086" width="483" height="132" color="#000000" fontSize="10">
+    <region left="9" top="4041" width="483" height="132" color="#000000" fontSize="10">
       <math decimalPlaces="6" significantDigitsMode="false">
         <input>
           <e type="operand">I_3</e>
@@ -3588,7 +3639,7 @@
         </result>
       </math>
     </region>
-    <region left="495" top="4086" width="127" height="123" color="#000000" fontSize="10">
+    <region left="495" top="4041" width="127" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">s_3</e>
@@ -3613,7 +3664,7 @@
         </result>
       </math>
     </region>
-    <region left="630" top="4086" width="135" height="123" color="#000000" fontSize="10">
+    <region left="630" top="4041" width="135" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">w_3</e>
@@ -3639,7 +3690,7 @@
         </result>
       </math>
     </region>
-    <region left="9" top="4230" width="483" height="132" color="#000000" fontSize="10">
+    <region left="9" top="4185" width="483" height="132" color="#000000" fontSize="10">
       <math decimalPlaces="6" significantDigitsMode="false">
         <input>
           <e type="operand">I_4</e>
@@ -3706,7 +3757,7 @@
         </result>
       </math>
     </region>
-    <region left="495" top="4230" width="127" height="123" color="#000000" fontSize="10">
+    <region left="495" top="4185" width="127" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">s_4</e>
@@ -3731,7 +3782,7 @@
         </result>
       </math>
     </region>
-    <region left="630" top="4230" width="135" height="123" color="#000000" fontSize="10">
+    <region left="630" top="4185" width="135" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">w_4</e>
@@ -3757,7 +3808,7 @@
         </result>
       </math>
     </region>
-    <region left="9" top="4374" width="483" height="132" color="#000000" fontSize="10">
+    <region left="9" top="4329" width="483" height="132" color="#000000" fontSize="10">
       <math decimalPlaces="6" significantDigitsMode="false">
         <input>
           <e type="operand">I_5</e>
@@ -3824,7 +3875,7 @@
         </result>
       </math>
     </region>
-    <region left="495" top="4374" width="127" height="123" color="#000000" fontSize="10">
+    <region left="495" top="4329" width="127" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">s_5</e>
@@ -3849,7 +3900,7 @@
         </result>
       </math>
     </region>
-    <region left="630" top="4374" width="135" height="123" color="#000000" fontSize="10">
+    <region left="630" top="4329" width="135" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">w_5</e>
@@ -3875,7 +3926,7 @@
         </result>
       </math>
     </region>
-    <region left="9" top="4509" width="483" height="132" color="#000000" fontSize="10">
+    <region left="9" top="4464" width="483" height="132" color="#000000" fontSize="10">
       <math decimalPlaces="6" significantDigitsMode="false">
         <input>
           <e type="operand">I_6</e>
@@ -3942,7 +3993,7 @@
         </result>
       </math>
     </region>
-    <region left="495" top="4518" width="127" height="123" color="#000000" fontSize="10">
+    <region left="495" top="4473" width="127" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">s_6</e>
@@ -3967,7 +4018,7 @@
         </result>
       </math>
     </region>
-    <region left="630" top="4518" width="135" height="123" color="#000000" fontSize="10">
+    <region left="630" top="4473" width="135" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">w_6</e>
@@ -3993,7 +4044,7 @@
         </result>
       </math>
     </region>
-    <region left="0" top="4662" width="483" height="132" color="#000000" fontSize="10">
+    <region left="0" top="4617" width="483" height="132" color="#000000" fontSize="10">
       <math decimalPlaces="6" significantDigitsMode="false">
         <input>
           <e type="operand">A_6</e>
@@ -4060,7 +4111,7 @@
         </result>
       </math>
     </region>
-    <region left="486" top="4662" width="143" height="123" color="#000000" fontSize="10">
+    <region left="486" top="4617" width="143" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">d_6</e>
@@ -4085,7 +4136,7 @@
         </result>
       </math>
     </region>
-    <region left="630" top="4662" width="138" height="123" color="#000000" fontSize="10">
+    <region left="630" top="4617" width="138" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">T_6</e>
@@ -4109,7 +4160,7 @@
         </result>
       </math>
     </region>
-    <region left="0" top="4797" width="483" height="132" color="#000000" fontSize="10">
+    <region left="0" top="4752" width="483" height="132" color="#000000" fontSize="10">
       <math decimalPlaces="6" significantDigitsMode="false">
         <input>
           <e type="operand">A_5</e>
@@ -4176,7 +4227,7 @@
         </result>
       </math>
     </region>
-    <region left="486" top="4797" width="143" height="123" color="#000000" fontSize="10">
+    <region left="486" top="4752" width="143" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">d_5</e>
@@ -4201,7 +4252,7 @@
         </result>
       </math>
     </region>
-    <region left="630" top="4797" width="138" height="123" color="#000000" fontSize="10">
+    <region left="630" top="4752" width="138" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">T_5</e>
@@ -4225,7 +4276,7 @@
         </result>
       </math>
     </region>
-    <region left="0" top="4923" width="478" height="132" color="#000000" fontSize="10">
+    <region left="0" top="4878" width="478" height="132" color="#000000" fontSize="10">
       <math decimalPlaces="6" significantDigitsMode="false">
         <input>
           <e type="operand">A_4</e>
@@ -4292,7 +4343,7 @@
         </result>
       </math>
     </region>
-    <region left="486" top="4923" width="143" height="123" color="#000000" fontSize="10">
+    <region left="486" top="4878" width="143" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">d_4</e>
@@ -4317,7 +4368,7 @@
         </result>
       </math>
     </region>
-    <region left="630" top="4923" width="138" height="123" color="#000000" fontSize="10">
+    <region left="630" top="4878" width="138" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">T_4</e>
@@ -4341,7 +4392,7 @@
         </result>
       </math>
     </region>
-    <region left="0" top="5049" width="483" height="132" color="#000000" fontSize="10">
+    <region left="0" top="5004" width="483" height="132" color="#000000" fontSize="10">
       <math decimalPlaces="6" significantDigitsMode="false">
         <input>
           <e type="operand">A_3</e>
@@ -4408,7 +4459,7 @@
         </result>
       </math>
     </region>
-    <region left="486" top="5049" width="143" height="123" color="#000000" fontSize="10">
+    <region left="486" top="5004" width="143" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">d_3</e>
@@ -4433,7 +4484,7 @@
         </result>
       </math>
     </region>
-    <region left="630" top="5049" width="138" height="123" color="#000000" fontSize="10">
+    <region left="630" top="5004" width="138" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">T_3</e>
@@ -4457,7 +4508,7 @@
         </result>
       </math>
     </region>
-    <region left="0" top="5175" width="491" height="132" color="#000000" fontSize="10">
+    <region left="0" top="5130" width="491" height="132" color="#000000" fontSize="10">
       <math decimalPlaces="6" significantDigitsMode="false">
         <input>
           <e type="operand">A_2</e>
@@ -4524,7 +4575,7 @@
         </result>
       </math>
     </region>
-    <region left="486" top="5175" width="143" height="123" color="#000000" fontSize="10">
+    <region left="486" top="5130" width="143" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">d_2</e>
@@ -4549,7 +4600,7 @@
         </result>
       </math>
     </region>
-    <region left="630" top="5175" width="138" height="123" color="#000000" fontSize="10">
+    <region left="630" top="5130" width="138" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">T_2</e>
@@ -4573,7 +4624,7 @@
         </result>
       </math>
     </region>
-    <region left="0" top="5301" width="491" height="132" color="#000000" fontSize="10">
+    <region left="0" top="5256" width="491" height="132" color="#000000" fontSize="10">
       <math decimalPlaces="6" significantDigitsMode="false">
         <input>
           <e type="operand">A_1</e>
@@ -4640,7 +4691,7 @@
         </result>
       </math>
     </region>
-    <region left="486" top="5301" width="143" height="123" color="#000000" fontSize="10">
+    <region left="486" top="5256" width="143" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">d_1</e>
@@ -4665,7 +4716,7 @@
         </result>
       </math>
     </region>
-    <region left="630" top="5301" width="138" height="123" color="#000000" fontSize="10">
+    <region left="630" top="5256" width="138" height="123" color="#000000" fontSize="10">
       <math significantDigitsMode="false">
         <input>
           <e type="operand">T_1</e>
@@ -4689,7 +4740,7 @@
         </result>
       </math>
     </region>
-    <region left="0" top="5472" width="135" height="123" color="#000000" fontSize="10">
+    <region left="0" top="5427" width="135" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">a_1</e>
@@ -4714,7 +4765,7 @@
         </result>
       </math>
     </region>
-    <region left="135" top="5472" width="190" height="132" color="#000000" fontSize="10">
+    <region left="135" top="5427" width="190" height="132" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">f_1</e>
@@ -4745,7 +4796,7 @@
         </result>
       </math>
     </region>
-    <region left="324" top="5472" width="220" height="123" color="#000000" fontSize="10">
+    <region left="324" top="5427" width="220" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">I_1</e>
@@ -4775,7 +4826,7 @@
         </result>
       </math>
     </region>
-    <region left="549" top="5472" width="226" height="123" color="#000000" fontSize="10">
+    <region left="549" top="5427" width="226" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">f_1</e>
@@ -4805,7 +4856,7 @@
         </result>
       </math>
     </region>
-    <region left="0" top="5607" width="135" height="123" color="#000000" fontSize="10">
+    <region left="0" top="5562" width="135" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">a_2</e>
@@ -4830,7 +4881,7 @@
         </result>
       </math>
     </region>
-    <region left="135" top="5607" width="159" height="123" color="#000000" fontSize="10">
+    <region left="135" top="5562" width="159" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">f_2</e>
@@ -4857,7 +4908,7 @@
         </result>
       </math>
     </region>
-    <region left="324" top="5607" width="220" height="123" color="#000000" fontSize="10">
+    <region left="324" top="5562" width="220" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">I_2</e>
@@ -4887,7 +4938,7 @@
         </result>
       </math>
     </region>
-    <region left="549" top="5607" width="226" height="123" color="#000000" fontSize="10">
+    <region left="549" top="5562" width="226" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">f_2</e>
@@ -4917,7 +4968,7 @@
         </result>
       </math>
     </region>
-    <region left="0" top="5733" width="135" height="123" color="#000000" fontSize="10">
+    <region left="0" top="5688" width="135" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">a_3</e>
@@ -4943,7 +4994,7 @@
         </result>
       </math>
     </region>
-    <region left="135" top="5733" width="146" height="123" color="#000000" fontSize="10">
+    <region left="135" top="5688" width="146" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">f_3</e>
@@ -4968,7 +5019,7 @@
         </result>
       </math>
     </region>
-    <region left="324" top="5733" width="220" height="123" color="#000000" fontSize="10">
+    <region left="324" top="5688" width="220" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">I_3</e>
@@ -4998,7 +5049,7 @@
         </result>
       </math>
     </region>
-    <region left="549" top="5733" width="226" height="123" color="#000000" fontSize="10">
+    <region left="549" top="5688" width="226" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">f_3</e>
@@ -5028,7 +5079,7 @@
         </result>
       </math>
     </region>
-    <region left="0" top="5859" width="135" height="123" color="#000000" fontSize="10">
+    <region left="0" top="5814" width="135" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">a_4</e>
@@ -5053,7 +5104,7 @@
         </result>
       </math>
     </region>
-    <region left="135" top="5859" width="167" height="123" color="#000000" fontSize="10">
+    <region left="135" top="5814" width="167" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">f_4</e>
@@ -5080,7 +5131,7 @@
         </result>
       </math>
     </region>
-    <region left="324" top="5859" width="220" height="123" color="#000000" fontSize="10">
+    <region left="324" top="5814" width="220" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">I_4</e>
@@ -5110,7 +5161,7 @@
         </result>
       </math>
     </region>
-    <region left="549" top="5859" width="226" height="123" color="#000000" fontSize="10">
+    <region left="549" top="5814" width="226" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">f_4</e>
@@ -5140,7 +5191,7 @@
         </result>
       </math>
     </region>
-    <region left="0" top="5985" width="143" height="123" color="#000000" fontSize="10">
+    <region left="0" top="5940" width="143" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">a_5</e>
@@ -5166,7 +5217,7 @@
         </result>
       </math>
     </region>
-    <region left="135" top="5985" width="154" height="123" color="#000000" fontSize="10">
+    <region left="135" top="5940" width="154" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">f_5</e>
@@ -5191,7 +5242,7 @@
         </result>
       </math>
     </region>
-    <region left="324" top="5985" width="220" height="123" color="#000000" fontSize="10">
+    <region left="324" top="5940" width="220" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">I_5</e>
@@ -5221,7 +5272,7 @@
         </result>
       </math>
     </region>
-    <region left="549" top="5985" width="226" height="123" color="#000000" fontSize="10">
+    <region left="549" top="5940" width="226" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">f_5</e>
@@ -5251,7 +5302,7 @@
         </result>
       </math>
     </region>
-    <region left="0" top="6111" width="135" height="123" color="#000000" fontSize="10">
+    <region left="0" top="6066" width="135" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">a_6</e>
@@ -5276,7 +5327,7 @@
         </result>
       </math>
     </region>
-    <region left="135" top="6111" width="182" height="132" color="#000000" fontSize="10">
+    <region left="135" top="6066" width="182" height="132" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">f_6</e>
@@ -5308,7 +5359,7 @@
         </result>
       </math>
     </region>
-    <region left="324" top="6111" width="220" height="123" color="#000000" fontSize="10">
+    <region left="324" top="6066" width="220" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">I_6</e>
@@ -5339,7 +5390,7 @@
         </result>
       </math>
     </region>
-    <region left="549" top="6111" width="185" height="123" color="#000000" fontSize="10">
+    <region left="549" top="6066" width="185" height="123" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">f_6</e>

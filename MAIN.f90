@@ -17,6 +17,7 @@
     implicit none
     
     integer, parameter :: n = 6
+    real(real64), parameter :: L = 0.09_r8, c = L/2
 
     ! Variables
     type(rbody) :: rb
@@ -32,16 +33,19 @@
     
     ! Set rigid body properties for ALL bodies
     rb%mass= 0.10_r8
-    rb%I_xx = 1.6717776d-6
-    rb%I_yy = 8.3413029d-5
-    rb%I_zz = 8.3413029d-5
-    rb%base_pos = 0.09_r8*i_
+    rb%I_xx = rb%mass * (0.0454304*L)**2  !1.6717776d-6
+    rb%I_yy = rb%mass * (0.3209035*L)**2  !8.3413029d-5
+    rb%I_zz = rb%mass * (0.3209035*L)**2  !8.3413029d-5
+    rb%base_pos = L*i_
     rb%base_rot = ROT_Z(0*rad_per_deg)
-    rb%cg = 0.045_r8*i_
+    rb%cg = c*i_
     rb%joint_type = revolute
     rb%joint_axis = z_axis
     rb%joint_driver = known_torque    
     rb%motor = 0.0_r8
+    
+    ! Show rigid body properties
+    print *, rb
     
     ! Fill chain with 'n' bodies, based on properies of 'rb' 
     call chain%initialize_chain(n, rb)

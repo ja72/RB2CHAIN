@@ -32,6 +32,8 @@
         contains
             procedure, pass :: initialize_mmoi                  ! Called once to set 3×3 MMOI matrices from component values
             procedure, private, pass :: get_joint_properties    ! Used by calc_kinematics to get joint axis screw for each frame
+            procedure, private, pass :: rb_write
+            generic :: write(formatted) => rb_write
         end type
                         
     contains    
@@ -75,7 +77,33 @@
                 axis = screw_o_
             end select
         end subroutine
-                
+        
+        subroutine rb_write(rb, unit, iotype, v_list, iostat, iomsg)
+        ! Custom write subroutine for rbody type. Called by 'write' statement in MAIN.f90
+        class(rbody), intent(in) :: rb
+        integer, intent(in) :: unit
+        character(*), intent(in) :: iotype
+        integer, intent(in) :: v_list(:)
+        integer, intent(out) :: iostat
+        character(*), intent(inout) :: iomsg
+  
+            !write (unit, "(A)", iostat=iostat, iomsg=iomsg) "Object says hello"
+        write(unit, fmt=100, iostat=iostat, iomsg=iomsg) 'Rigid Body Properties:', new_line('a')
+        write(unit, fmt=101, iostat=iostat, iomsg=iomsg) 'Overall Length = ', maxval(rb%base_pos), ' m'                         , new_line('a')
+        write(unit, fmt=101, iostat=iostat, iomsg=iomsg) 'Center of Gravity Offset = ', maxval(rb%cg), ' m'                     , new_line('a')
+        write(unit, fmt=101, iostat=iostat, iomsg=iomsg) 'Mass = ', rb%mass, ' kg'                                              , new_line('a')
+        write(unit, fmt=101, iostat=iostat, iomsg=iomsg) 'I_xx = ', rb%I_xx, ' kg*m^2'                                          , new_line('a')
+        write(unit, fmt=101, iostat=iostat, iomsg=iomsg) 'I_yy = ', rb%I_yy, ' kg*m^2'                                          , new_line('a')
+        write(unit, fmt=101, iostat=iostat, iomsg=iomsg) 'I_zz = ', rb%I_zz, ' kg*m^2'                                          , new_line('a')
+        write(unit, fmt=101, iostat=iostat, iomsg=iomsg) 'Joint Type   (1:revolute, 2:prismatic)        = ', (rb%joint_type)    , new_line('a')
+        write(unit, fmt=101, iostat=iostat, iomsg=iomsg) 'Joint Axis   (1:x-axis, 2:y-axis, 3:z-axis)   = ', (rb%joint_axis)    , new_line('a')
+        write(unit, fmt=101, iostat=iostat, iomsg=iomsg) 'Joint Driver (1:known_torque, 2:known_motion) = ', (rb%joint_driver)  , new_line('a')
+        write(unit, fmt=101, iostat=iostat, iomsg=iomsg) 'Motor Torque/Motion = ', rb%motor, ' N*m'                             , new_line('a')
+        
+100     format(a,a)
+101     format(1x,a,g0,a,a)
+        
+        end subroutine        
         
     end module
     
