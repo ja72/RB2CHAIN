@@ -1,5 +1,8 @@
-﻿module rigid_body_chain
-    use show_matrix_mod
+﻿!***************************************************************************    
+    
+    !DEC$ REAL:8    
+    module mod_body_chain
+    use mod_show_matrix
     use mod_rigid_body
     use mod_kinematics
     implicit none
@@ -9,54 +12,75 @@
       enumerator crb_method
     end enum
 
-    type :: rbchain
+    type :: chain_t
         integer(int32) :: n_count
-        real(real64) :: time, step
-        type(rbody), allocatable :: bodies(:)
+        real(real64) :: step
+        type(body_t), allocatable :: bodies(:)
         integer(int32), allocatable :: parents(:)
     contains
-        procedure, pass :: initialize_chain
         procedure, pass :: chain_kinematics
         procedure, pass :: chain_articulated
         procedure, pass :: chain_dynamics
         procedure, pass :: calc_acceleration_art
         procedure, pass :: calc_acceleration_crb
-        procedure, pass :: do_step
+        procedure, pass :: do_step_state
+        procedure, pass :: do_step_array
+        generic :: do_step => do_step_array, do_step_state
     end type
 
+    
+    interface do_step
+    module procedure :: do_step_state
+    module procedure :: do_step_array
+    end interface
+    
     contains
     
-    subroutine do_step(chain, n_count, t, q, qp, qpp, tau, h, method)
-    !dec$ attributes dllexport :: do_step
-    !dec$ attributes alias:'do_step' :: do_step
-    !dec$ attributes value :: n_count, h, method
-    class(rbchain), intent(inout) :: chain
+    pure subroutine do_step_state(chain, state, h, method)
+    class(chain_t), intent(inout) :: chain
+    real(real64), intent(in) :: h
+    type(state_t(chain%n_count)), intent(inout) :: state
+    integer, intent(in) :: method
+        call do_step_array(chain, &
+                            state%t, &
+                            state%q, &
+                            state%qp, &
+                            state%qpp, &
+                            state%tau, &
+                            h, method)
+    end subroutine
+    
+    pure subroutine do_step_array(chain, t, q, qp, qpp, tau, h, method)
+    !!dec$ attributes dllexport :: do_step
+    !!dec$ attributes alias:'do_step' :: do_step
+    !!dec$ attributes value :: n_count, h, method
+    class(chain_t), intent(inout) :: chain
     REAL(real64), intent(inout) :: t
-    integer(int32), intent(in) :: n_count
+    real(real64), intent(inout) :: q(chain%n_count), qp(chain%n_count), &
+                                    qpp(chain%n_count), tau(chain%n_count)
     real(real64), intent(in) :: h
     integer, intent(in) :: method
-    real(real64), intent(inout) :: q(n_count), qp(n_count), qpp(n_count), tau(n_count)
-    real(real64) :: K(4,n_count), C(4,n_count)
-        
+    real(real64) :: K(4,chain%n_count), C(4,chain%n_count)
+    type(kinematics_t) :: kin(chain%n_count)
         select case(method)
         case(ART_METHOD)
             C(1,:) = qp
-            call calc_acceleration_art(chain, t, q, C(1,:), K(1,:), tau )
+            call calc_acceleration_art(chain, t, q, C(1,:), K(1,:), tau, kin)
             C(2,:) = C(1,:) + h/2*K(1,:)
-            call calc_acceleration_art(chain, t+h/2, q+h/2*C(1,:),C(2,:), K(2,:), tau)
+            call calc_acceleration_art(chain, t+h/2, q+h/2*C(1,:),C(2,:), K(2,:), tau, kin)
             C(3,:) = C(1,:) + h/2*K(2,:)
-            call calc_acceleration_art(chain, t+h/2, q+h/2*C(2,:),C(3,:), K(3,:), tau)
+            call calc_acceleration_art(chain, t+h/2, q+h/2*C(2,:),C(3,:), K(3,:), tau, kin)
             C(4,:) = C(1,:) + h*K(3,:)
-            call calc_acceleration_art(chain, t+h, q+h*C(3,:),C(4,:), K(4,:), tau)            
+            call calc_acceleration_art(chain, t+h, q+h*C(3,:),C(4,:), K(4,:), tau, kin)            
         case(CRB_METHOD)
             C(1,:) = qp
-            call calc_acceleration_crb(chain, t, q, C(1,:), K(1,:), tau )
+            call calc_acceleration_crb(chain, t, q, C(1,:), K(1,:), tau, kin)
             C(2,:) = C(1,:) + h/2*K(1,:)
-            call calc_acceleration_crb(chain, t+h/2, q+h/2*C(1,:),C(2,:), K(2,:), tau)
+            call calc_acceleration_crb(chain, t+h/2, q+h/2*C(1,:),C(2,:), K(2,:), tau, kin)
             C(3,:) = C(1,:) + h/2*K(2,:)
-            call calc_acceleration_crb(chain, t+h/2, q+h/2*C(2,:),C(3,:), K(3,:), tau)
+            call calc_acceleration_crb(chain, t+h/2, q+h/2*C(2,:),C(3,:), K(3,:), tau, kin)
             C(4,:) = C(1,:) + h*K(3,:)
-            call calc_acceleration_crb(chain, t+h, q+h*C(3,:),C(4,:), K(4,:), tau)            
+            call calc_acceleration_crb(chain, t+h, q+h*C(3,:),C(4,:), K(4,:), tau, kin)            
         case default
         error stop 'Invalid solution method selected'
         end select
@@ -64,13 +88,13 @@
         t = t + h 
         q = q + h*(C(1,:)+2*C(2,:)+2*C(3,:)+C(4,:))/6
         qp = C(1,:) + h*(K(1,:)+2*K(2,:)+2*K(3,:)+K(4,:))/6
-        call calc_acceleration_art(chain, t, q, qp, qpp, tau )
+        call calc_acceleration_art(chain, t, q, qp, qpp, tau, kin )
     end subroutine
 
-    subroutine initialize_chain(chain, n_count, rb_prototype)
-    class(rbchain), intent(out) :: chain
+    pure function chain_initialize(n_count, rb_prototype) result(chain)
+    type(chain_t) :: chain
     integer(int32), intent(in) :: n_count
-    type(rbody), intent(in), optional :: rb_prototype
+    type(body_t), intent(in), optional :: rb_prototype
     integer(int32) :: idx
         chain%n_count = n_count
         allocate(chain%bodies(n_count))
@@ -80,37 +104,18 @@
         end if
         ! Default to a chain structure. Each parent is the previous body
         forall(idx=1:n_count) chain%parents(idx)=idx-1
-    end subroutine
+    end function
 
-    !subroutine prepare_simulation(chain, time_step)
-    !class(rbchain), intent(inout) :: chain
-    !real(real64), intent(in), optional :: time_step
-    !integer(int32) :: i
-    !    chain%time = 0
-    !    if(present(time_step)) then
-    !        chain%step = time_step
-    !    else
-    !        chain%step = 1d-4
-    !    end if
-    !    do i=1,chain%n_count
-    !        call chain%bodies(i)%initialize_mmoi()
-    !    end do
-    !end subroutine
-
-    function chain_kinematics(chain, time, q, qp) result(kin)
-    class(rbchain), intent(inout) :: chain
+    pure function chain_kinematics(chain, time, q, qp) result(kin)
+    class(chain_t), intent(in) :: chain
     real(real64), intent(in) :: time
     real(real64), intent(in) :: q(:), qp(:)
-    type(kinematics) :: kin(chain%n_count)
-    type(rbody) :: rbs(chain%n_count)
-    real(real64) :: z(3)
-    integer(int32) :: idx, n_count, jdx
-    real(real64) :: prev_pos(3), prev_rot(3,3), prev_vel(6), mcx(3,3)
-    real(real64) :: Ic(3,3), Mc(3,3), rot_t(3,3), I(3,3), M(3,3), cgx(3,3)
+    type(kinematics_t) :: kin(chain%n_count)
+    type(body_t) :: rbs(chain%n_count)
+    integer(int32) :: idx, n_count, jdx    
 
         n_count  =chain%n_count
         rbs = chain%bodies
-        chain%time = time
         do idx=1,n_count
             jdx = chain%parents(idx)
             kin(idx)%parent_index = jdx
@@ -121,33 +126,14 @@
                 call kin(idx)%calc(rbs(idx), time, q(idx), qp(idx), kin(jdx))
             else
                 call kin(idx)%calc(rbs(idx), time, q(idx), qp(idx))
-            end if            
-            
-            !dec$ IF DEFINED    (DEBUG)
-            print *, 'Calculating kinematics for body', idx
-            print *, 'pos:'
-            call show(kin(idx)%pos)
-            print *, 'axis:'
-            call show(kin(idx)%axis)
-            print *, 'spi:'
-            call show(kin(idx)%spi)
-            print *, 'weight:'
-            call show(kin(idx)%weight)
-            print *, 'vel:'
-            call show(kin(idx)%vel)
-            print *, 'kappa:'
-            call show(kin(idx)%kappa)
-            print *, 'bias:'
-            call show(kin(idx)%bias)
-            !dec$ endif
+            end if                        
         end do
     end function
 
-    function chain_articulated(chain, kin) result(art)
-    class(rbchain), intent(in) :: chain
-    type(kinematics), intent(in) :: kin(:)
-    type(articulated) :: art(chain%n_count)
-    real(real64) :: ars(6)
+    pure function chain_articulated(chain, kin) result(art)
+    class(chain_t), intent(in) :: chain
+    type(kinematics_t), intent(in) :: kin(:)
+    type(articulated_t) :: art(chain%n_count)
     integer(int32) :: idx, n_count, kdx
         n_count = chain%n_count
         !allocate(art(n_count))
@@ -161,25 +147,14 @@
 
             call art(idx)%calc()
             
-            !dec$ IF DEFINED    (DEBUG)
-            print *, 'Calculating articulated for body', idx
-            print *, 'ari: (articulated inertia)'
-            call show(art(idx)%ari)
-            print *, 'arb: (articulated bias force)'
-            call show(art(idx)%arb)
-            print *, 'iap: (articulated percussiob axis)'
-            call show(art(idx)%iap)
-            print *, 'rsp: (artuculated reaction space)'
-            call show(art(idx)%rsp)
-            !dec$ endif
         end do
     end function
 
-    function chain_dynamics(chain, art) result(kin)
-    class(rbchain), intent(in) :: chain
-    type(articulated),intent(in):: art(:)
-    type(kinematics) :: kin(chain%n_count)
-    real(real64) :: prev_acc(6), h, hh, s(6), A(6,6), f_nxt(6)
+    pure function chain_dynamics(chain, art) result(kin)
+    class(chain_t), intent(in) :: chain
+    type(articulated_t),intent(in):: art(:)
+    type(kinematics_t) :: kin(chain%n_count)
+    real(real64) :: prev_acc(6), h, s(6), A(6,6), f_nxt(6)
     integer(int32) :: n_count, idx, jdx, kdx
         n_count = chain%n_count
         do idx=1,n_count
@@ -208,22 +183,8 @@
             !tex: ${\bf f}_{\rm acc}  = {\bf I}_i {\bf a}_i + {\bf p}_i$
             kin(idx)%facc = matmul(kin(idx)%spi, kin(idx)%acc) + kin(idx)%bias
             
-            !dec$ IF DEFINED    (DEBUG)
-            print *, 'Calculating dynamics for body', idx
-            print *, 'acc:'
-            call show(kin(idx)%acc)
-            print *, 'frc:'
-            call show(kin(idx)%force)
-            print *, 'facc:'
-            call show(kin(idx)%facc)
-            !dec$ ENDIF
         end do
-        
-        !dec$ IF DEFINED    (DEBUG)
-        print *, 'qpp:'
-        call show(kin(:)%qpp)
-        !dec$ ENDIF
-        
+            
         do idx=n_count,1,-1
             f_nxt = screw_o_
             do kdx=idx+1,n_count
@@ -235,13 +196,12 @@
         end do
     end function
 
-    subroutine calc_acceleration_art(chain,t,q,qp,qpp,tau,sol)
-    class(rbchain), intent(inout) :: chain
+    pure subroutine calc_acceleration_art(chain,t,q,qp,qpp,tau, kin)
+    class(chain_t), intent(inout) :: chain
     real(real64), intent(in) :: t, q(:), qp(:)
     real(real64), intent(inout) :: qpp(chain%n_count), tau(chain%n_count)
-    type(kinematics), intent(out), optional :: sol(chain%n_count)
-    type(kinematics) :: kin(chain%n_count)
-    type(articulated) :: art(chain%n_count)
+    type(kinematics_t), intent(out) :: kin(chain%n_count)
+    type(articulated_t) :: art(chain%n_count)
     integer(int32) :: n_count
     
         n_count = chain%n_count
@@ -250,25 +210,23 @@
         kin = chain%chain_dynamics(art)
         qpp = kin%qpp
         tau = kin%tau
-        if( present(sol) ) then
-            sol = kin
-        end if
     end subroutine
 
-    subroutine calc_acceleration_crb(chain,t,q,qp,qpp,tau)
-    class(rbchain), intent(inout) :: chain
+    pure subroutine calc_acceleration_crb(chain,t,q,qp,qpp,tau, kin)
+    use mod_lu_solver
+    class(chain_t), intent(inout) :: chain
     real(real64), intent(in) :: t, q(chain%n_count), qp(chain%n_count)
     real(real64), intent(inout) :: qpp(chain%n_count), tau(chain%n_count)
-    type(kinematics) :: kin(chain%n_count)
+    type(kinematics_t), intent(out) :: kin(chain%n_count)
         
-    real(real64), allocatable, save :: &
+    real(real64), allocatable :: &
         axis(:,:), spi(:,:), kappa(:), bias(:), vel(:), acc(:), force(:), &
         relative(:,:), tree(:,:), tree_t(:,:), spc(:,:), axis_t(:,:), mmoi(:,:,:), spc2(:,:)
         
-    integer(int32), allocatable, save :: pivot(:), itree(:,:), eri(:)
+    integer(int32), allocatable :: pivot(:), itree(:,:)
     integer(int32) :: idx, jdx, u, kdx, row, prow, n_count, known
         
-    real(real64), allocatable, save :: A(:,:), b(:), qpp_known(:), tau_known(:)
+    real(real64), allocatable :: A(:,:), b(:), qpp_known(:), tau_known(:)
     !real(real64) :: screw_err(6), joint_err(chain%n_count), acm(3), frc(3)
 
         n_count = chain%n_count
@@ -396,6 +354,85 @@
         end do
         
     end function
+
+    function chain_init_demo(n, rb, state) result(chain)
+    type(chain_t) :: chain
+    integer, intent(in) :: n
+    type(body_t), intent(in) :: rb
+    type(state_t(n)), intent(out) :: state
+    integer :: i
     
+    ! Fill chain with 'n' bodies, based on properies of 'rb' 
+    chain = chain_initialize(n, rb)
+
+    !Set first body joint at the origin
+    chain%bodies(1)%base_pos = o_
+    
+    ! Prepare state object
+    state%t   = 0.0_r8
+    state%q   = [ (0._r8, i=1,n) ]  ! Set joint positions
+    state%qp  = [ (0._r8, i=1,n) ]  ! Set joint velocities
+    state%qpp = [ (0._r8, i=1,n) ]  ! Set joint torques
+    state%tau = [ (0._r8, i=1,n) ]
+    
+    state%qp(6) = 1._r8        
+    end function
+    
+    
+    subroutine chain_print_cal(kin, art)
+    type(kinematics_t), intent(in) :: kin
+    type(articulated_t), intent(in), optional :: art
+    
+    print *, 'Joint Properties'
+    
+    print *, 'q:'
+    call show(kin%q)    
+    print *, 'qp:'
+    call show(kin%qp)    
+    print *, 'qpp:'
+    call show(kin%qpp)    
+    print *, 'tau:'
+    call show(kin%tau)    
+    
+    print *, 'Calculating kinematics for body'
+    print *, 'pos:'
+    call show(kin%pos)
+    print *, 'axis:'
+    call show(kin%axis)
+    !print *, 'spi:'
+    !call show(kin%spi)
+    print *, 'weight:'
+    call show(kin%weight)
+    print *, 'vel:'
+    call show(kin%vel)
+    print *, 'kappa:'
+    call show(kin%kappa)
+    print *, 'bias:'
+    call show(kin%bias)
+    
+    if( present(art) ) then
+    
+    print *, 'Calculating articulated_t for body'
+    print *, 'ari: (articulated_t inertia)'
+    call show(art%ari)
+    print *, 'arb: (articulated_t bias force)'
+    call show(art%arb)
+    print *, 'iap: (articulated_t percussiob axis)'
+    call show(art%iap)
+    print *, 'rsp: (artuculated reaction space)'
+    call show(art%rsp)
+
+    end if
+    
+    print *, 'Calculating dynamics for body'
+    print *, 'acc:'
+    call show(kin%acc)
+    print *, 'frc:'
+    call show(kin%force)
+    print *, 'facc:'
+    call show(kin%facc)
+                
+    
+    end subroutine
 
 end module

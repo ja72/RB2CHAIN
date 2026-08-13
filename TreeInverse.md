@@ -12,29 +12,29 @@ below is used to find the inverse `T` of `(1-P)` such that `v = T*s*qp` without 
 
 Example code using MATLAB:
 
- * Initialization of sparse tree matrix
+ - **Initialization of sparse tree matrix**
 
-	% Parent indices
-	k = [0,1,1,3]   % or [0,1,2,3], [0,1,1,1], [0,1,2,2], ...
-
-	% Construct parent matrix P
-	n = size(k,2);
-	P = zeros(n,n);
-	for i=2:n
-		P(i,k(i))=-1;
-	end
-
-
- * Inversion to tree matrix T = inv(1-P)
-
-	T=eye(n);
-	for i=2:n,
-		j=k(i);
-		while j>0,
-			T(i,j)=1;
-			j=k(j);
-		end;
-	end
+       % Parent indices
+        k = [0,1,1,3]   % or [0,1,2,3], [0,1,1,1], [0,1,2,2], ...
+        
+        % Construct parent matrix P
+        n = size(k,2);
+        P = zeros(n,n);
+        for i=2:n
+          % first body is root (no parent)
+          P(i,k(i))=-1;
+        end
 
 
-Reference SO question:	http://math.stackexchange.com/questions/2096755/how-do-i-invert-this-sparse-lower-triangular-matrix
+ - **Inversion to tree matrix** `T = inv(1-P)`
+
+        T=eye(n);
+        for i=2:n,
+          j=k(i);
+          while j>0,
+            T(i,j)=1;
+            j=k(j);
+          end;
+        end
+
+ > [Reference SO question](http://math.stackexchange.com/questions/2096755/how-do-i-invert-this-sparse-lower-triangular-matrix)

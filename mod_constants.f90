@@ -11,21 +11,21 @@
 !  Modified by   Date   Change(s) made
 !  -----------  ------  ------------------------------------------------
 
-    MODULE constants
-    use, intrinsic :: ISO_FORTRAN_ENV, only: INT32, INT64, REAL32, REAL64, REAL128
+    !DIR$ REAL:8
+    MODULE mod_constants
+    use, intrinsic :: iso_fortran_env, only: int32, int64, real32, real64, real128
     IMPLICIT NONE
-    
-        INTEGER, PARAMETER :: dimensions = 3
+    public        
 
-        ! Select integer and float precision constants
-        ! NOTE: Recommended to use constants defined in ISO_C_BINDING for
+        ! Select integer and float precision mod_constants
+        ! NOTE: Recommended to use mod_constants defined in ISO_C_BINDING for
         !       compatibity with modern hardware (CPU+RAM) and software
-        INTEGER, PARAMETER :: i1 = SELECTED_INT_KIND(2)
-        INTEGER, PARAMETER :: i2 = SELECTED_INT_KIND(4)
-        INTEGER, PARAMETER :: i4 = SELECTED_INT_KIND(9)
-        INTEGER, PARAMETER :: r4 = SELECTED_REAL_KIND(6, 37)
-        INTEGER, PARAMETER :: r8 = SELECTED_REAL_KIND(15, 307)
-        INTEGER, PARAMETER :: r16 = SELECTED_REAL_KIND(32)        
+        ! INTEGER, PARAMETER :: i2  = SELECTED_INT_KIND(4)
+        INTEGER, PARAMETER :: i4  = int32   !SELECTED_INT_KIND(9)
+        INTEGER, PARAMETER :: i8  = int64   !SELECTED_INT_KIND(9)
+        INTEGER, PARAMETER :: r4  = real32  !SELECTED_REAL_KIND(6, 37)
+        INTEGER, PARAMETER :: r8  = real64  !SELECTED_REAL_KIND(15, 307)
+        INTEGER, PARAMETER :: r16 = real128 !SELECTED_REAL_KIND(32)        
 
         ! Constants used for various calculations (double precision)
         REAL(real64), PARAMETER :: pi    = 3.1415926535897932D0

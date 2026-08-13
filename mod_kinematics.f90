@@ -1,76 +1,86 @@
+!***************************************************************************
+    
+    !DEC$ REAL:8    
     module mod_kinematics
     use mod_rigid_body
     implicit none
+    
+    type :: state_t(n)
+        integer, len :: n
+        real :: t
+        real, dimension(n) :: q, qp, qpp, tau
+    end type
 
-    type :: kinematics
-        integer  :: parent_index                          ! Array index of parent body
-        integer  :: joint_driver                          ! Joint drive flag (1=known torque, 2=known motion)
-        real(real64) :: q                                     ! Joint position angle/distance
-        real(real64) :: qp                                    ! Joint velocity
-        real(real64) :: qpp                                   ! Joint accleration
-        real(real64) :: tau                                   ! Joint torque/force
-        real(real64) :: pos(3)                                ! Position vector for top of joint
-        real(real64) :: rot(3,3)                              ! Rotation matrix for body orientation
-        real(real64) :: axis(6)                               ! Joint motion axis (twist)
-        real(real64) :: cg(3)                                 ! Center of mass position vector
-        real(real64) :: spi(6,6), spm(6,6)                    ! Spatial inertia and mobility
-        real(real64) :: vel(6)                                ! Spatial velocity of body (twist)
-        real(real64) :: applied_force(6)                      ! Applied forces on body (wrench)
-        real(real64) :: weight(6)                             ! Weight wrench of body (wrench)
-        real(real64) :: kappa(6)                              ! Corriolis acceleration of joint (twist)
-        real(real64) :: bias(6)                               ! Centripetal forces of body (wrench)
-        real(real64) :: acc(6)                                ! Spatial acceleration of the rigid body
-        real(real64) :: force(6)                              ! The joint reaction force on the body(wrench)
-        real(real64) :: fnet(6)                               ! The net force on the body(wrench)
-        real(real64) :: facc(6)                               ! The inertial force on the body(wrench)
+    type :: kinematics_t
+        integer  :: parent_index            ! Array index of parent body
+        integer  :: joint_driver            ! Joint drive flag (1=known torque, 2=known motion)
+        real(real64) :: time                ! Time stamp
+        real(real64) :: q                   ! Joint position angle/distance
+        real(real64) :: qp                  ! Joint velocity
+        real(real64) :: qpp                 ! Joint accleration
+        real(real64) :: tau                 ! Joint torque/force
+        real(real64) :: pos(3)              ! Position vector for top of joint
+        real(real64) :: rot(3,3)            ! Rotation matrix for body orientation
+        real(real64) :: axis(6)             ! Joint motion axis (twist)
+        real(real64) :: cg(3)               ! Center of mass position vector
+        real(real64) :: spi(6,6), spm(6,6)  ! Spatial inertia and mobility
+        real(real64) :: vel(6)              ! Spatial velocity of body (twist)
+        real(real64) :: applied_force(6)    ! Applied forces on body (wrench)
+        real(real64) :: weight(6)           ! Weight wrench of body (wrench)
+        real(real64) :: kappa(6)            ! Corriolis acceleration of joint (twist)
+        real(real64) :: bias(6)             ! Centripetal forces of body (wrench)
+        real(real64) :: acc(6)              ! Spatial acceleration of the rigid body
+        real(real64) :: force(6)            ! The joint reaction force on the body(wrench)
+        real(real64) :: fnet(6)             ! The net force on the body(wrench)
+        real(real64) :: facc(6)             ! The inertial force on the body(wrench)
     contains
     procedure, pass :: velocity_at => point_velocity
     procedure, pass :: acceleration_at => point_acceleration
     procedure, pass :: calc => calc_kinematics
     end type
 
-    type :: articulated
-        type(kinematics) :: kin                               ! Body kinematics
-        real(real64) :: ari(6,6)                              ! Articulated inertia matrix
-        real(real64) :: arb(6)                                ! Articulated bias forces
-        real(real64) :: iap(6)                                ! Articulated axis of percussion
-        real(real64) :: rsp(6,6)                              ! Articulated reaction space
+    type :: articulated_t
+        type(kinematics_t) :: kin           ! Body kinematics_t
+        real(real64) :: ari(6,6)            ! Articulated inertia matrix
+        real(real64) :: arb(6)              ! Articulated bias forces
+        real(real64) :: iap(6)              ! Articulated axis of percussion
+        real(real64) :: rsp(6,6)            ! Articulated reaction space
     contains
     procedure, pass :: init => init_articulated
     procedure, pass :: next => next_articulated
     procedure, pass :: calc => calc_articulated
     
     end type
-
+        
     contains
 
     pure function point_velocity(kin, r) result(v)
-    class(kinematics), intent(in) :: kin
+    class(kinematics_t), intent(in) :: kin
     real(real64), intent(in) :: r(3)
     real(real64) :: v(3)
     v = kin%vel(1:3) + ( kin%vel(4:6) .x. r)
     end function
 
     pure function point_acceleration(kin, r) result(a)
-    class(kinematics), intent(in) :: kin
+    class(kinematics_t), intent(in) :: kin
     real(real64), intent(in) :: r(3)
     real(real64) :: a(3)
     a = kin%acc(1:3) + ( kin%acc(4:6) .x. r) + (kin%vel(4:6) .x. (kin%vel(4:6) .x. r))
     end function
 
     pure subroutine calc_kinematics(kin, rb, time, q, qp, parent_kin)
+    use mod_show_matrix
     ! Arguments
-    class(kinematics), intent(inout) :: kin
-    type(rbody), intent(in) :: rb
+    class(kinematics_t), intent(inout) :: kin
+    type(body_t), intent(in) :: rb
     real(real64), intent(in) :: time
     real(real64), intent(in) :: q, qp
-    type(kinematics), intent(in), optional :: parent_kin
+    type(kinematics_t), intent(in), optional :: parent_kin
     ! Local variables
-    real(real64) :: z(3)
-    integer(int32) :: idx, n_count, jdx
+    real(real64) :: z(3), d
     real(real64) :: prev_pos(3), prev_rot(3,3), prev_vel(6), mcx(3,3)
     real(real64) :: Ic(3,3), Mc(3,3), rot_t(3,3), I(3,3), M(3,3), cgx(3,3)
-
+    kin%time         = time
     kin%q            = q
     kin%qp           = qp
     kin%joint_driver = rb%joint_driver
@@ -109,8 +119,18 @@
     end select
     ! Fill in the spatial inertia matrix for this body. This is a 6×6 matrix that combines the mass and inertia
     !call rb%get_spatial_mmoi_matrix(kin%pos, kin%rot, kin%cg, kin%spi, kin%spm)
-
-    call rb%initialize_mmoi(Ic, Mc)
+    
+    Ic(:,1) = [rb%I_xx, rb%I_xy, rb%I_xz]
+    Ic(:,2) = [rb%I_xy, rb%I_yy, rb%I_yz]
+    Ic(:,3) = [rb%I_xz, rb%I_yz, rb%I_zz]
+    
+    !Mc = solve(Ic, E3_)
+    ! Find discriminate of 3×3 MMOI matrix
+    d = Ic(1,1)*Ic(2,2)*Ic(3,3)+2*Ic(1,2)*Ic(2,3)*Ic(3,1)-Ic(1,1)*Ic(2,3)**2D0-Ic(2,2)*Ic(1,3)**2D0-Ic(3,3)*Ic(1,2)**2D0
+    ! Set columns of inverse of MMOI in Mc
+    Mc(:,1) = [Ic(2,2)*Ic(3,3)-Ic(2,3)**2D0, Ic(1,3)*Ic(2,3)-Ic(1,2)*Ic(3,3), Ic(1,2)*Ic(2,3)-Ic(1,3)*Ic(2,2)]/d
+    Mc(:,2) = [Ic(1,3)*Ic(2,3)-Ic(1,2)*Ic(3,3), Ic(1,1)*Ic(3,3)-Ic(1,3)**2D0, Ic(1,2)*Ic(1,3)-Ic(1,1)*Ic(2,3)]/d
+    Mc(:,3) = [Ic(1,2)*Ic(2,3)-Ic(1,3)*Ic(2,2), Ic(1,2)*Ic(1,3)-Ic(1,1)*Ic(2,3), Ic(1,1)*Ic(2,2)-Ic(1,2)**2D0]/d        
 
     rot_t = transpose(kin%rot)
     !tex: Moment of inertia in world coordinates:
@@ -133,7 +153,9 @@
     kin%spi(1:3, 4:6) = -mcx
     kin%spi(4:6, 1:3) =  mcx
     kin%spi(4:6, 4:6) = I-matmul(mcx,cgx)
-
+    
+101 format (6(f11.4,","))
+    
     !tex: Spatial Mobility:
     !$${\bf M}_{i}=\begin{pmatrix}\tfrac{1}{m_{i}}-\vec{c}_{i}\times\mathcal{I}_{i}^{\mbox{-}1}\vec{c}_{i}\times & \vec{c}_{i}\times\mathcal{I}_{i}^{\mbox{-}1}\\
     !\mbox{-}\mathcal{I}_{i}^{\mbox{-}1}\vec{c}_{i}\times & \mathcal{I}_{i}^{\mbox{-}1}
@@ -143,6 +165,13 @@
     kin%spm(1:3, 4:6) = matmul(cgx,M)
     kin%spm(4:6, 1:3) = -mcx
     kin%spm(4:6, 4:6) = M
+    
+!dec$ IF DEFINED    (DEBUG)
+    kin%spm = rb%get_spatial_mass_matrix(kin%cg, kin%rot, .true.)
+    !print *, "Calculated spatial mobility matrix:"
+    !print 101, kin%spm
+    !call show(kin%spm)
+!dec$ endif
 
     !tex: ${\bf w}_i = \pmatrix{ m_i \vec{g} & \vec{c}_i\times m_i \vec{g} }$
     kin%weight= wrench(rb%mass*gee, kin%cg)
@@ -159,17 +188,17 @@
     end subroutine
 
     pure subroutine init_articulated(art, kin)
-    class(articulated), intent(inout) :: art
-    type(kinematics), intent(in) :: kin
+    class(articulated_t), intent(inout) :: art
+    type(kinematics_t), intent(in) :: kin
         art%kin = kin
         art%ari = kin%spi
         art%arb = kin%bias - (kin%weight + kin%applied_force)
     end subroutine
     
     pure subroutine next_articulated(art, child_art)
-    class(articulated), intent(inout) :: art
-    class(articulated), intent(in) :: child_art
-    type(kinematics) :: child_kin
+    class(articulated_t), intent(inout) :: art
+    class(articulated_t), intent(in) :: child_art
+    type(kinematics_t) :: child_kin
     
         child_kin = child_art%kin
         ! For all child objects project their inertia
@@ -191,7 +220,7 @@
     
     pure subroutine calc_articulated(art)
     ! Arguments
-    class(articulated), intent(inout) :: art   
+    class(articulated_t), intent(inout) :: art   
     ! Local Variables
     real(real64) :: ars(6), axis(6)
         axis = art%kin%axis

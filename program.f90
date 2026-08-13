@@ -12,69 +12,74 @@
 !
 !****************************************************************************
     program Main
-    use show_matrix_mod
-    use rigid_body_chain
+    use mod_show_matrix
+    use mod_body_chain
     implicit none
     
     integer, parameter :: n = 6
     real(real64), parameter :: L = 0.09_r8, c = L/2
 
     ! Variables
-    type(rbody) :: rb
+    type(body_t) :: rb
     !type(state) :: st(n)
-    type(rbchain) :: chain
-    type(kinematics) :: sol(n)
-    real(real64) :: t, h, q(n), qp(n), qpp(n), tau(n)
+    type(chain_t) :: chain
+    type(kinematics_t) :: sol(n)
+    type(state_t(n)) :: state
+    real(real64) :: h
     real(real64) :: f_err(n)
     integer :: i, steps, fi, sol_method, j
     integer(int64) :: tic, toc, rate
     real(real32) :: time, steps_per_sec
-    !call test_linear_system()
     
-    ! Set rigid body properties for ALL bodies
-    rb%mass= 0.10_r8
-    rb%I_xx = rb%mass * (0.0454304*L)**2  !1.6717776d-6
-    rb%I_yy = rb%mass * (0.3209035*L)**2  !8.3413029d-5
-    rb%I_zz = rb%mass * (0.3209035*L)**2  !8.3413029d-5
-    rb%base_pos = L*i_
-    rb%base_rot = ROT_Z(0*rad_per_deg)
-    rb%cg = c*i_
-    rb%joint_type = revolute
-    rb%joint_axis = z_axis
-    rb%joint_driver = known_torque    
-    rb%motor = 0.0_r8
+    
+    ! chain = rb_initialization(n,rb,t,q,qp,qpp,tau)
+    
+    rb = rb_init_demo()
+    chain  = chain_init_demo(n, rb, state)
     
     ! Show rigid body properties
     print *, rb
     
-    ! Fill chain with 'n' bodies, based on properies of 'rb' 
-    call chain%initialize_chain(n, rb)
-
-    !Set first body joint at the origin
-    chain%bodies(1)%base_pos = o_
-    !chain%rb(6)%joint_driver = known_motion
-    !chain%rb(6)%motor = 0D0
+    !dec$ IF DEFINED    (DEBUG)
     
-    ! Set time step (not used) and initialize MMOI matrices
-    !call chain%prepare_simulation()    
-
-    ! Prepare state object
-    t = 0.0_r8
-    q = [(0._r8,i=1,n)]   ! Set joint positions
-    qp = [(0._r8,i=1,n)]  ! Set joint velocities
-    tau = [(0._r8,i=1,n)]  ! Set joint torques
-    qp(6) = 1._r8
+    call rb_test_calculation(chain, state)
     
-    call calc_acceleration_art(chain, t, q, qp, qpp, tau, sol)
+    !dec$ ELSE
+    
+    sol_method = ART_METHOD 
+    call rb_do_simulation(chain, state, sol_method)
+    
+    !dec$ ENDIF
+    
+    contains
+        
+    subroutine rb_test_calculation(chain, state)
+    use mod_show_matrix    
+    type(chain_t), intent(inout) :: chain
+    type(state_t(chain%n_count)), intent(inout) :: state
+    type(kinematics_t) :: sol(chain%n_count)
+    
+    call calc_acceleration_art(chain, &
+        state%t, &
+        state%q, &
+        state%qp, &
+        state%qpp, &
+        state%tau, &
+        sol)
     do j=1,n
         f_err(j) = maxval(abs( sol(j)%fnet - sol(j)%facc ))
     end do
     print *, 'Force Balance Error (max abs value) for each body:'
     call show(f_err)    
-    !dec$ IF DEFINED    (DEBUG)
-    stop
-    !dec$ ENDIF
-    sol_method = ART_METHOD 
+    
+    end subroutine
+    
+    subroutine rb_do_simulation(chain, state, sol_method)
+    use mod_show_matrix
+    type(chain_t), intent(inout) :: chain
+    type(state_t(chain%n_count)), intent(inout) :: state
+    integer, intent(in) :: sol_method
+    
     !sol_method = CRB_METHOD
     
     select case (sol_method)
@@ -94,10 +99,10 @@
     h = 5d0/steps
     do i=1,steps
         
-        call chain%do_step(n, t, q, qp, qpp, tau, h, sol_method)
+        call chain%do_step(state, h, sol_method)
         
         if(mod(i,steps/20)==0) then
-            write(*,*) 'step=',i,' of ',steps, ' t=', t
+            write(*,*) 'step=',i,' of ',steps, ' t=', state%t
         end if
     end do
     
@@ -109,14 +114,13 @@
     print *, 'speed = ', steps_per_sec, ' steps/second'
     
     open(newunit=fi, file='results.txt', action='write')
-    write(fi,*) t
-    write(fi,*) q
-    write(fi,*) qp
-    write(fi,*) qpp
-    write(fi,*) tau
+    write(fi,*) state%t
+    write(fi,*) state%q
+    write(fi,*) state%qp
+    write(fi,*) state%qpp
+    write(fi,*) state%tau
     close(fi)
-    
-    contains
+    end subroutine
     
         
     end program

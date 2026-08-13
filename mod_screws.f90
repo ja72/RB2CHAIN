@@ -11,9 +11,10 @@
 !  Modified by   Date   Change(s) made
 !  -----------  ------  ------------------------------------------------
 !
-    MODULE screw_algebra
-    !USE constants
-    USE vector_algebra
+    !DEC$ REAL:8    
+    MODULE mod_screws
+    !USE mod_constants
+    USE mod_vectors
     implicit none
     
         ! Unit screws definition

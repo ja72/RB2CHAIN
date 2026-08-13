@@ -11,8 +11,10 @@
 !  Modified by   Date   Change(s) made
 !  -----------  ------  ------------------------------------------------
 !
-    MODULE vector_algebra
-    USE constants
+    
+    !DEC$ REAL:8    
+    MODULE mod_vectors
+    USE mod_constants
     implicit none
     
         ! Constants for fixed-axis directions
@@ -345,143 +347,6 @@
             end select
         end function
                 
-        !************************************************************************
-        !*  Summary:                                                            *
-        !*      Solves a linear system of equations of the form y=A*x+b         *
-        !*                                                                      *
-        !*  Description:                                                        *
-        !*      The system of equations is solved for some of the values in x   *
-        !*      and some of the values in y based on the index array `pivot`,   *
-        !*      the system size `n` and `k` the # of known `x`'s                *
-        !*                                                                      *
-        !*      `pivot` contains the index of all known `y`'s first and then    *
-        !*      all known `x`'s next. See example below:                        *
-        !*                                                                      *
-        !*      The function returns the full vector `x`. Use `y=A*x+b` for `y` *
-        !*                                                                      *
-        !*  Example:                                                            *
-        !*      | y_1 |   | 10  -2  5  | |  1  |   | -19 |                      *
-        !*      | 10  | = | -2  11  1  | | x_2 | + | -45 |                      *
-        !*      | y_3 |   | -1   2  5  | |  3  |   |  -6 |                      *
-        !*                                                                      *
-        !*      A = [[10.0,-2.0,5.0],[-2.0,27.0,1.0],[-1.0,2.0,5.0]]            *
-        !*      b = [-19.0,-45.0,-6.0]               solution:                  *
-        !*      x_known = [1.0,3.0]                 } x = [1.0, 2.0, 3.0]       *
-        !*      y_known = [10.0]                    } y = [2.0, 10.0, 12.0]     *
-        !*      pivot = [2,1,3]        => known: y(2), x(1), x(3)               *
-        !*      n = 3                                                           *
-        !*      k = 2                                                           *
-        !*                                                                      *
-        !*  Remarks:                                                            *
-        !*      The function calls LU decomposition `ludcmp` and solver `lubksb`*
-        !*      to solve for the unknowns.                                      *
-        pure subroutine solve_linear_system(A, b, x, y, pivot, n, k)
-        use lu
-        real(real64), intent(in) :: A(n,n), b(n)
-        real(real64), intent(inout) :: x(n), y(n)
-        integer(INT32), intent(in) :: pivot(n), n, k
-        integer(INT32) :: u, code, d, indx(n-k)
-        real(real64) :: r(n-k), A1(n-k,n-k), A3(n-k,k), b1(n-k)
-                        
-            u = n-k
-            if(k>0) then
-                
-                A1 = A(pivot(1:u), pivot(1:u))
-                A3 = A(pivot(1:u), pivot(u+1:n))
-                b1 = b(pivot(1:u))
-                
-                r = y(pivot(1:u))-matmul(A3, x(pivot(u+1:n)))-b1
-                call ludcmp(A1,u,indx,d,code)
-                call lubksb(A1,u,indx,r)
-                
-                x(pivot(1:u)) = r
-            else if(u>0) then
-                r = y - b
-                A1 = A
-                call ludcmp(A1,u,indx,d,code)
-                call lubksb(A1,u,indx,r)
-                x = r
-            end if                            
-            y = matmul(A,x)+b
-        end subroutine
-        
-        pure subroutine solve_linear_system_full(A, y, x, n, m)
-        ! Solve system of equations y=A*x for all unknowns in x. 
-        ! A is n�n, x and y are n�m. 
-        use lu
-        integer, intent(in),value :: n, m
-        real(real64), intent(in) :: A(n,n), y(n,m)
-        real(real64), intent(out) :: x(n,m)
-        integer :: u, code, d, indx(n)
-        real(real64) :: r(n,m), A1(n,n), b1(n,m)
-            r = y
-            A1 = A
-            call ludcmp(A1,u,indx,d,code)
-            call lubksb(A1,u,indx,r)
-            x = r
-        end subroutine
-        
-        !! requires additional depenency on linker of
-        !! mkl_blas95_lp64.lib mkl_lapack95_lp64.lib
-        !!
-        !pure subroutine solve_linear_system_mkl(A, b, x, y, pivot, n, k)
-        !use blas95
-        !use lapack95
-        !real(real64), intent(in) :: A(n,n), b(n)
-        !real(real64), intent(inout) :: x(n), y(n)
-        !integer(INT32), intent(in) :: pivot(n), n, k
-        !integer(INT32) :: u, code, d, indx(n-k)
-        !real(real64) :: r(n-k), A1(n-k,n-k), A3(n-k,k), b1(n-k)
-        !                
-        !    u = n-k
-        !    if(k>0) then
-        !        
-        !        A1 = A(pivot(1:u), pivot(1:u))
-        !        A3 = A(pivot(1:u), pivot(u+1:n))
-        !        b1 = b(pivot(1:u))
-        !        
-        !        r = y(pivot(1:u))-matmul(A3, x(pivot(u+1:n)))-b1
-        !        call gesv(A1,r,indx,code)
-        !        !call ludcmp(A1,u,indx,d,code)
-        !        !call lubksb(A1,u,indx,r)
-        !        
-        !        x(pivot(1:u)) = r
-        !    else if(u>0) then
-        !        r = y - b
-        !        A1 = A
-        !        call gesv(A1,r,indx,code)
-        !        !call ludcmp(A1,u,indx,d,code)
-        !        !call lubksb(A1,u,indx,r)
-        !        x = r
-        !    end if                            
-        !    y = matmul(A,x)+b
-        !end subroutine
-        
-        
-        subroutine test_linear_system()
-        integer, parameter :: n = 3
-        real(real64) :: A(n,n), b(n), x(n), y(n)
-        integer(INT32) :: pivot(n), k
-        real(real64) :: err_x(1), err_y(2)
-        
-        A = transpose(reshape([10d0,-2d0,5d0,-2d0,11d0,1d0,-1d0,2d0,5d0],[n,n]))
-        b = [-26d0,-13d0,-10d0]
-        x = [1d0, 0d99, 3d0]
-        y = [0d99, 10d0, 0d99]
-                
-        k = 2               ! 2 known 'x'
-        pivot = [2,1,3]     ! x([1,3]) : known, y([2]) : known
-        
-        call solve_linear_system(A,b,x,y,pivot,n,k)
-        
-        if( x(2)==2d0 .and. y(1)==-5d0 .and. y(3)==8d0 ) then
-        else
-            ! Check failed
-            stop
-        end if
-        
-        
-        end subroutine
         
         !***********************************************************************
         ! Creates a 3�3 rotation matrix based on the axis/angle formula.

@@ -1,14 +1,65 @@
-    module show_matrix_mod
+!***************************************************************************
+    
+    module mod_show_matrix
     use, intrinsic :: iso_fortran_env
     implicit none
     
     interface show
+        procedure show_scalar_i, show_scalar_r, show_scalar_d    
         procedure show_vector_i, show_vector_r, show_vector_d
         procedure show_matrix_i, show_matrix_r, show_matrix_d
     end interface
 
     
     contains
+    
+        subroutine show_scalar_i(v, w)
+    ! Display the vector 'v' in a single column
+    !   v : the array of real numbers
+    !   w : the column width. default = 5
+    !   s : sig. figures w-5 (calculated)
+        integer, intent(in) :: v
+        integer, intent(in), optional :: w
+        integer :: wt
+        character(len=16) :: fmt
+        if(present(w)) then
+            wt = w
+        else
+            wt = 5
+        end if
+        write( fmt, "(a,g0,a)") "(g",wt,".0)"
+        write( * , fmt ) v
+    end subroutine
+       
+    subroutine show_scalar_r(v, w)
+    ! Display the vector 'v' in a single column
+    !   v : the array of real numbers
+    !   w : the column width. default = 12
+    !   s : sig. figures w-5 (calculated)
+        real(real32), intent(in) :: v
+        integer, intent(in), optional :: w
+        integer :: dg,wt
+        character(len=16) :: fmt
+        if(present(w)) then
+            wt = w
+        else
+            wt = 13
+        end if
+        dg = wt - 7
+        write( fmt, "(a,g0,a,g0,a)") "(g",wt,".",dg,")"
+        write( * , fmt ) v    
+    end subroutine
+    
+    subroutine show_scalar_d(v, w)
+    ! Display the vector 'v' in a single column
+    !   v : the array of real numbers
+    !   w : the column width. default = 12
+    !   s : sig. figures w-5 (calculated)
+        real(real64), intent(in) :: v
+        integer, intent(in), optional :: w
+        call show_scalar_r(real(v),w)
+    end subroutine
+    
     
         subroutine show_vector_i(v, w)
     ! Display the vector 'v' in a single column
